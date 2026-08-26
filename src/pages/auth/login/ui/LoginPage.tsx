@@ -1,7 +1,7 @@
 export function LoginPage() {
     return (
         <>
-            loginPage
+            страница входа
         </>
     )
 };
