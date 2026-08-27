@@ -1,4 +1,5 @@
 import { useForm } from "react-hook-form";
+import { Link } from "react-router-dom";
 
 interface LoginFormData {
     email: string;
@@ -50,9 +51,14 @@ export function LoginForm() {
                     <span>{errors.password.message}</span>
                 )}
 
+                <Link to="/auth/forgot-password">
+                    Забыли пароль?
+                </Link>
+
                 <button type="submit">
                     Войти
                 </button>
+
             </form>
         </>
     )
