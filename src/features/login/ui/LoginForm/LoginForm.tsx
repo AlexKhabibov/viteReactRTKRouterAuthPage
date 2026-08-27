@@ -28,6 +28,9 @@ export function LoginForm() {
         }
     };
 
+    if (isLoading) return <h1>Загрузка...</h1>
+    if (error) return <h1> Ошибка</h1>
+
     return (
         <>
             <form onSubmit={handleSubmit(onSubmit)}>

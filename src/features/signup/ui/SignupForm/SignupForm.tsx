@@ -1,4 +1,5 @@
 import { useForm } from "react-hook-form";
+import { useSignupMutation } from "../../api/signupApi";
 
 interface SignupFormData {
     nickname: string;
@@ -12,14 +13,29 @@ interface SignupFormData {
 
 export function SignupForm() {
 
+    const [signup, { isLoading, error }] = useSignupMutation();
+
     const { register,
         handleSubmit,
         formState: { errors },
     } = useForm<SignupFormData>();
 
-    const onSubmit = (data: SignupFormData) => {
-        console.log(data);
+    const onSubmit = async (data: SignupFormData) => {
+        try {
+            const result = await signup({
+                username: data.nickname,
+                password: data.password,
+                email: data.email,
+            }).unwrap();
+
+            console.log(result);
+        } catch (error) {
+            console.log(error);
+        }
     };
+
+    if (isLoading) return <h1>Загрузка...</h1>
+    if (error) return <h1> Ошибка</h1>
 
     return (
         <>
