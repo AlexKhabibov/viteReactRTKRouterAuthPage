@@ -1,7 +1,11 @@
+import { ResetPasswordForm } from "./ResetPasswordForm/ResetPasswordForm";
+
 export function ResetPasswordPage() {
     return (
         <>
-            страница сроса пароля
+            страница сброса пароля
+
+            <ResetPasswordForm />
         </>
     )
 };
