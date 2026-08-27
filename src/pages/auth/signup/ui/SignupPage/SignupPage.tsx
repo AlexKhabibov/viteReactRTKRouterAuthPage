@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
-import { SignupForm } from "./SignupForm/SignupForm";
 import { SocialAuth } from "@/features/social-auth";
+import { SignupForm } from "@/features/signup";
 
 export function SignupPage() {
     return (

@@ -1,5 +1,5 @@
+import { ForgotPasswordForm } from "@/features/forgot-password";
 import { Link } from "react-router-dom";
-import { ForgotPasswordForm } from "./ForgotPasswordForm/ForgotPasswordForm";
 
 export function ForgotPasswordPage() {
 
