@@ -1,5 +1,6 @@
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
+import { useLoginMutation } from "../../api/loginApi";
 
 interface LoginFormData {
     email: string;
@@ -8,12 +9,23 @@ interface LoginFormData {
 
 export function LoginForm() {
 
+    const [login, { isLoading, error }] = useLoginMutation();
+
     const { register,
         handleSubmit,
         formState: { errors }, } = useForm<LoginFormData>();
 
-    const onSubmit = (data: LoginFormData) => {
-        console.log(data);
+    const onSubmit = async (data: LoginFormData) => {
+        try {
+            const result = await login({
+                username: data.email,
+                password: data.password,
+            }).unwrap();
+
+            console.log(result);
+        } catch (error) {
+            console.log(error);
+        }
     };
 
     return (
