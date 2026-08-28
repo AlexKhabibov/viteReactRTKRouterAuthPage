@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useLoginMutation } from "../../api/loginApi";
 import { setAccessToken } from "@/shared/api/lib/auth/token";
 
@@ -9,6 +9,8 @@ interface LoginFormData {
 }
 
 export function LoginForm() {
+
+    const navigate = useNavigate();
 
     const [login, { isLoading, error }] = useLoginMutation();
 
@@ -23,10 +25,13 @@ export function LoginForm() {
                 password: data.password,
             }).unwrap();
 
-             setAccessToken(result.access_token);
-             console.log(result.access_token)
+            setAccessToken(result.access_token);
 
+            console.log(result.access_token);
             console.log(result);
+
+            navigate('/dashboard');
+
         } catch (error) {
             console.log(error);
         }

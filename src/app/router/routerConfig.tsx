@@ -4,6 +4,7 @@ import { createBrowserRouter } from "react-router-dom";
 import { SignupPage } from "@/pages/auth/signup";
 import { ForgotPasswordPage } from "@/pages/auth/forgot-password";
 import { ResetPasswordPage } from "@/pages/auth/reset-password";
+import { ProtectedRoute } from "./ProtectedRoute";
 
 export const router = createBrowserRouter([
     {
@@ -28,7 +29,12 @@ export const router = createBrowserRouter([
         ],
     },
     {
-        path: "/dashboard",
-        element: <DashboardPage />,
-    },
+        element: <ProtectedRoute />,
+        children: [
+            {
+                path: "/dashboard",
+                element: <DashboardPage />,
+            },
+        ],
+    }
 ]);
