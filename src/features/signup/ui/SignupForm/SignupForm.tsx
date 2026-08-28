@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { useSignupMutation } from "../../api/signupApi";
-import { setAccessToken } from "@/shared/api/lib/auth/token";
 import { useNavigate } from "react-router-dom";
+import { setAccessToken } from "@/shared/api/lib";
 
 interface SignupFormData {
     nickname: string;
@@ -38,7 +38,7 @@ export function SignupForm() {
             console.log(result);
 
             navigate('/dashboard');
-            
+
         } catch (error) {
             console.log(error);
         }
