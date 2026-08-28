@@ -1,6 +1,7 @@
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import { useLoginMutation } from "../../api/loginApi";
+import { setAccessToken } from "@/shared/api/lib/auth/token";
 
 interface LoginFormData {
     email: string;
@@ -21,6 +22,9 @@ export function LoginForm() {
                 username: data.email,
                 password: data.password,
             }).unwrap();
+
+             setAccessToken(result.access_token);
+             console.log(result.access_token)
 
             console.log(result);
         } catch (error) {

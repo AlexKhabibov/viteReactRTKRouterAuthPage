@@ -1,5 +1,6 @@
 import { useForm } from "react-hook-form";
 import { useSignupMutation } from "../../api/signupApi";
+import { setAccessToken } from "@/shared/api/lib/auth/token";
 
 interface SignupFormData {
     nickname: string;
@@ -27,6 +28,8 @@ export function SignupForm() {
                 password: data.password,
                 email: data.email,
             }).unwrap();
+
+            setAccessToken(result.access_token);
 
             console.log(result);
         } catch (error) {
