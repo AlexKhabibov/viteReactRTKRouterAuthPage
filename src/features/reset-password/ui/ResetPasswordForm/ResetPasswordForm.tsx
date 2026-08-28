@@ -1,6 +1,8 @@
-import { useForm } from "react-hook-form";
-import { useResetPasswordMutation } from "../../api/resetPasswordApi";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { useSearchParams } from "react-router-dom";
+import { useResetPasswordMutation } from "../../api/resetPasswordApi";
+import { setAccessToken } from "@/shared/api/lib";
 
 interface ResetPasswordFormData {
     password: string;
@@ -8,10 +10,10 @@ interface ResetPasswordFormData {
 }
 
 export function ResetPasswordForm() {
-
-
     const [resetPassword, { isLoading, error }] = useResetPasswordMutation();
     const [isPasswordReset, setIsPasswordReset] = useState(false);
+    const [searchParams] = useSearchParams();
+    const token = searchParams.get("token");
 
     const {
         register,
@@ -21,31 +23,33 @@ export function ResetPasswordForm() {
     } = useForm<ResetPasswordFormData>();
 
     const onSubmit = async (data: ResetPasswordFormData) => {
+        if (!token) {
+            console.log("Токен отсутствует");
+            return;
+        }
 
         try {
             const result = await resetPassword({
                 password: data.password,
                 passwordConfirm: data.passwordConfirm,
-                token: "token", // временно
+                token,
             }).unwrap();
 
-            console.log(result);
-
+            setAccessToken(result.access_token);
             setIsPasswordReset(true);
 
         } catch (error) {
             console.log(error);
         }
     };
-
+    
     if (isLoading) return <p>Загрузка...</p>;
     if (error) return <p>Ошибка</p>;
+    if (!token) return <p>Недействительная ссылка для восстановления пароля</p>;
     if (isPasswordReset) return <h2>Пароль успешно изменён</h2>;
 
     return (
-
         <form onSubmit={handleSubmit(onSubmit)}>
-
             <input
                 type="password"
                 placeholder="Новый пароль"
@@ -54,6 +58,11 @@ export function ResetPasswordForm() {
                     minLength: {
                         value: 8,
                         message: "Пароль должен содержать минимум 8 символов",
+                    },
+                    pattern: {
+                        value: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]+$/,
+                        message:
+                            "Пароль должен содержать латинские буквы и цифры",
                     },
                 })}
             />
@@ -64,7 +73,7 @@ export function ResetPasswordForm() {
 
             <input
                 type="password"
-                placeholder="Повторите пароль"
+                placeholder="Подтвердите пароль"
                 {...register("passwordConfirm", {
                     required: "Подтвердите пароль",
                     validate: (value) =>
@@ -82,4 +91,4 @@ export function ResetPasswordForm() {
             </button>
         </form>
     );
-};
+}
