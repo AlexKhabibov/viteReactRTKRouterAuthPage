@@ -9,11 +9,11 @@ export function LogoutButton() {
     const handleLogout = async () => {
         try {
             await logout().unwrap();
-
-            removeAccessToken();
-            navigate("/auth/login", { replace: true });
         } catch (error) {
             console.log(error);
+        } finally {
+            removeAccessToken();
+            navigate("/auth/login", { replace: true });
         }
     };
 
