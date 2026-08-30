@@ -8,7 +8,7 @@ interface SidebarProps {
 
 const navigationItems = [
     { label: "Главная", icon: "🏠", path: "/dashboard" },
-    { label: "Мой профиль", icon: "👤", path: "/profile" },
+    { label: "Мой профиль", icon: "👤", path: "/dashboard/profile" },
     { label: "Обучение", icon: "📚", path: "/education" },
     { label: "Блог", icon: "📝", path: "/blog" },
     { label: "Менторы", icon: "👥", path: "/mentors" },

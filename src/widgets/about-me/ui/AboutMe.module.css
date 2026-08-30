@@ -1,0 +1,48 @@
+.about {
+    margin-top: 24px;
+    padding: 24px;
+
+    background: var(--white-color-900);
+    border-radius: 12px;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 16px;
+}
+
+.header h2 {
+    margin: 0;
+
+    font-family: var(--font-main);
+    font-size: 20px;
+    font-weight: var(--weight-semibold);
+}
+
+.editButton {
+    padding: 8px 16px;
+
+    border: 1px solid var(--purple-color-1000);
+    border-radius: 8px;
+
+    background: transparent;
+    color: var(--purple-color-1000);
+
+    font-family: var(--font-main);
+    font-size: 13px;
+
+    cursor: pointer;
+}
+
+.text {
+    margin: 0;
+
+    font-family: var(--font-main);
+    font-size: 14px;
+    line-height: 1.5;
+
+    color: var(--black-color-400);
+}

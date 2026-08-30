@@ -41,7 +41,7 @@ export const router = createBrowserRouter([
                         element: <DashboardPage />,
                     },
                     {
-                        path: "/profile",
+                        path: "/dashboard/profile",
                         element: <ProfilePage />,
                     },
                 ],

@@ -1,6 +1,8 @@
 import { useGetProfileQuery } from "@/features/profile";
-import { AboutMe } from "@/widgets/about-me/ui/AboutMe/AboutMe";
+import { AboutMe } from "@/widgets/about-me";
 import { ProfileInfo } from "@/widgets/profile-info";
+import { ProfileSkills } from "@/widgets/profile-skills";
+import styles from "./ProfilePage.module.css";
 
 export function ProfilePage() {
     const { data, isLoading, error } = useGetProfileQuery();
@@ -18,12 +20,14 @@ export function ProfilePage() {
     }
 
     return (
-        <div>
-            <h1>Мой профиль</h1>
+        <div className={styles.page}>
+            <h1 className={styles.title}>Мой профиль</h1>
 
             <ProfileInfo profile={data} />
 
             <AboutMe />
+
+            <ProfileSkills />
         </div>
     );
 }

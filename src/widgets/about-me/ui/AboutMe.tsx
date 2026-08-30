@@ -1,15 +1,20 @@
+import styles from "./AboutMe.module.css";
+
 export function AboutMe() {
     return (
-        <section>
-            <div>
+        <section className={styles.about}>
+            <div className={styles.header}>
                 <h2>Обо мне</h2>
 
-                <button type="button">
+                <button
+                    type="button"
+                    className={styles.editButton}
+                >
                     Редактировать
                 </button>
             </div>
 
-            <p>
+            <p className={styles.text}>
                 Информация о пользователе пока отсутствует.
             </p>
         </section>
