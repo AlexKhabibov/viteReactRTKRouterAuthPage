@@ -1,0 +1,75 @@
+.sidebar {
+    width: 240px;
+    flex-shrink: 0;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    box-sizing: border-box;
+    padding: 24px 16px;
+
+    transition: width 0.2s ease;
+}
+
+.sidebarCollapsed {
+    width: 64px;
+}
+
+.navigationList {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    margin: 0;
+    padding: 0;
+
+    list-style: none;
+}
+
+.link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    padding: 10px 12px;
+
+    text-decoration: none;
+}
+
+.active {
+    font-weight: 700;
+}
+
+.icon {
+    width: 24px;
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.actionButton {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    width: 100%;
+    padding: 10px 12px;
+
+    border: 0;
+    background: none;
+
+    cursor: pointer;
+}
+
+.logout {
+    width: 100%;
+}
