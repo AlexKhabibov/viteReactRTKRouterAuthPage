@@ -59,7 +59,7 @@ export function Sidebar({ isCollapsed }: SidebarProps) {
                 </button>
 
                 <div className={styles.logout}>
-                    <LogoutButton />
+                    <LogoutButton isCollapsed={isCollapsed} />
                 </div>
             </div>
         </aside>

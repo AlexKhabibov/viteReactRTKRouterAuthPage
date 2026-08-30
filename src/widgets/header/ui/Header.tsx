@@ -1,31 +1,56 @@
+import { useGetProfileQuery } from "@/features/profile";
+
+import styles from "./Header.module.css";
+
 interface HeaderProps {
     isSidebarCollapsed: boolean;
     onToggleSidebar: () => void;
 }
 
 export function Header({
-    isSidebarCollapsed,
     onToggleSidebar,
 }: HeaderProps) {
-    return (
-        <header className="header">
-            <div className="header__left">
-                <div>Logo</div>
+    const { data } = useGetProfileQuery();
 
-                <button type="button" onClick={onToggleSidebar}>
-                    {isSidebarCollapsed
-                        ? "Отобразить"
-                        : "Свернуть"}
+    return (
+        <header className={styles.header}>
+            <div className={styles.left}>
+                <div className={styles.logo}>
+                    Logo
+                </div>
+
+                <button
+                    type="button"
+                    className={styles.toggleButton}
+                    onClick={onToggleSidebar}
+                >
+                    ☰
                 </button>
             </div>
 
-            <div className="header__right">
-                <button type="button">
-                    Настройки
+            <div className={styles.right}>
+                <button
+                    type="button"
+                    className={styles.settingsButton}
+                    aria-label="Настройки"
+                >
+                    ⚙️
                 </button>
 
-                <button type="button">
-                    Профиль
+                <button
+                    type="button"
+                    className={styles.profileButton}
+                    aria-label="Профиль"
+                >
+                    {data?.avatarUrl ? (
+                        <img
+                            className={styles.avatar}
+                            src={data.avatarUrl}
+                            alt={data.username}
+                        />
+                    ) : (
+                        <span>👤</span>
+                    )}
                 </button>
             </div>
         </header>
