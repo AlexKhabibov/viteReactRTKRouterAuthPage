@@ -6,6 +6,7 @@ import { ResetPasswordPage } from "@/pages/auth/reset-password";
 import { createBrowserRouter } from "react-router-dom";
 import { ProtectedRoute } from "./ProtectedRoute";
 import { DashboardLayout } from "../layouts/dashboard/DashboardLayout";
+import { ProfilePage } from "@/pages/profile";
 
 export const router = createBrowserRouter([
     {
@@ -38,6 +39,10 @@ export const router = createBrowserRouter([
                     {
                         path: "/dashboard",
                         element: <DashboardPage />,
+                    },
+                    {
+                        path: "/profile",
+                        element: <ProfilePage />,
                     },
                 ],
             },
