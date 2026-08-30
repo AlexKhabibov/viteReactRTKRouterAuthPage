@@ -1,11 +1,9 @@
 import { useState } from "react";
 import { Outlet } from "react-router-dom";
-
 import { Header } from "@/widgets/header";
 import { Sidebar } from "@/widgets/sidebar";
-import { Footer } from "@/widgets/footer";
-
 import styles from "./DashboardLayout.module.css";
+import { Footer } from "@/widgets/footer";
 
 export function DashboardLayout() {
     const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
