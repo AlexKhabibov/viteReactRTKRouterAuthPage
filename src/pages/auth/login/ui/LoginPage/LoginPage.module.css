@@ -1,0 +1,45 @@
+.container {
+    width: 100%;
+    max-width: 540px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.container h1 {
+    margin: 0 0 45px;
+
+    font-size: 42px;
+    line-height: 1.2;
+    font-weight: 400;
+    text-align: center;
+
+    color: #222222;
+}
+
+.switch {
+    width: 100%;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-top: 120px;
+    padding: 18px 26px;
+
+    border-radius: 12px;
+
+    background-color: #eeeeee;
+
+    font-size: 16px;
+}
+
+.switch a {
+    color: #6415ff;
+    text-decoration: none;
+}
+
+.switch a:hover {
+    text-decoration: underline;
+}

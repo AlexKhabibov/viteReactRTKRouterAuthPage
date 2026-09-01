@@ -1,7 +1,10 @@
 import { useForm } from "react-hook-form";
-import { useSignupMutation } from "../../api/signupApi";
 import { useNavigate } from "react-router-dom";
+
+import { useSignupMutation } from "../../api/signupApi";
 import { setAccessToken } from "@/shared/api/lib";
+
+import styles from "./SignupForm.module.css";
 
 interface SignupFormData {
     nickname: string;
@@ -14,12 +17,12 @@ interface SignupFormData {
 }
 
 export function SignupForm() {
-
     const navigate = useNavigate();
 
     const [signup, { isLoading, error }] = useSignupMutation();
 
-    const { register,
+    const {
+        register,
         handleSubmit,
         formState: { errors },
     } = useForm<SignupFormData>();
@@ -34,38 +37,55 @@ export function SignupForm() {
 
             setAccessToken(result.access_token);
 
-            console.log(result.access_token);
-            console.log(result);
-
-            navigate('/dashboard');
-
+            navigate("/dashboard");
         } catch (error) {
             console.log(error);
         }
     };
 
-    if (isLoading) return <h1>Загрузка...</h1>
-    if (error) return <h1> Ошибка</h1>
+    if (isLoading) {
+        return <h1>Загрузка...</h1>;
+    }
+
+    if (error) {
+        return <h1>Ошибка</h1>;
+    }
 
     return (
-        <>
-            <form onSubmit={handleSubmit(onSubmit)}>
+        <form
+            className={styles.form}
+            onSubmit={handleSubmit(onSubmit)}
+        >
+            <div className={styles.field}>
+                <label htmlFor="nickname">
+                    Никнейм
+                </label>
 
                 <input
+                    id="nickname"
                     type="text"
-                    placeholder="Никнейм"
+                    placeholder="Введите никнейм"
                     {...register("nickname", {
                         required: "Введите никнейм",
                     })}
                 />
 
                 {errors.nickname && (
-                    <span>{errors.nickname.message}</span>
+                    <span className={styles.error}>
+                        {errors.nickname.message}
+                    </span>
                 )}
+            </div>
+
+            <div className={styles.field}>
+                <label htmlFor="email">
+                    Электронная почта
+                </label>
 
                 <input
+                    id="email"
                     type="email"
-                    placeholder="Email"
+                    placeholder="Введите электронную почту"
                     {...register("email", {
                         required: "Введите email",
                         pattern: {
@@ -76,17 +96,27 @@ export function SignupForm() {
                 />
 
                 {errors.email && (
-                    <span>{errors.email.message}</span>
+                    <span className={styles.error}>
+                        {errors.email.message}
+                    </span>
                 )}
+            </div>
+
+            <div className={styles.field}>
+                <label htmlFor="password">
+                    Пароль
+                </label>
 
                 <input
+                    id="password"
                     type="password"
-                    placeholder="Пароль"
+                    placeholder="Введите пароль"
                     {...register("password", {
                         required: "Введите пароль",
                         minLength: {
                             value: 8,
-                            message: "Пароль должен содержать минимум 8 символов",
+                            message:
+                                "Пароль должен содержать минимум 8 символов",
                         },
                         pattern: {
                             value: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]+$/,
@@ -97,12 +127,21 @@ export function SignupForm() {
                 />
 
                 {errors.password && (
-                    <span>{errors.password.message}</span>
+                    <span className={styles.error}>
+                        {errors.password.message}
+                    </span>
                 )}
+            </div>
+
+            <div className={styles.field}>
+                <label htmlFor="confirmPassword">
+                    Подтвердить пароль
+                </label>
 
                 <input
+                    id="confirmPassword"
                     type="password"
-                    placeholder="Подтвердите пароль"
+                    placeholder="Введите пароль"
                     {...register("confirmPassword", {
                         required: "Подтвердите пароль",
                         validate: (value, formValues) =>
@@ -112,39 +151,64 @@ export function SignupForm() {
                 />
 
                 {errors.confirmPassword && (
-                    <span>{errors.confirmPassword.message}</span>
+                    <span className={styles.error}>
+                        {errors.confirmPassword.message}
+                    </span>
                 )}
+            </div>
 
-                <button type="submit">
-                    Зарегистрироваться
-                </button>
+            <button
+                className={styles.submit}
+                type="submit"
+            >
+                Зарегистрироваться
+            </button>
+
+            <div className={styles.agreements}>
+                <p>
+                    Проставив галочку («✓») и нажимая
+                    «Зарегистрироваться»:
+                </p>
 
                 <label>
                     <input
                         type="checkbox"
                         {...register("personalDataAgreement", {
-                            required: "Необходимо дать согласие на обработку данных",
+                            required:
+                                "Необходимо дать согласие на обработку данных",
                         })}
                     />
-                    Даю согласие на обработку данных
+
+                    <span>
+                        Даю согласие на обработку данных
+                    </span>
                 </label>
 
                 {errors.personalDataAgreement && (
-                    <span>{errors.personalDataAgreement.message}</span>
+                    <span className={styles.error}>
+                        {errors.personalDataAgreement.message}
+                    </span>
                 )}
 
                 <label>
                     <input
                         type="checkbox"
                         {...register("contractAgreement", {
-                            required: "Необходимо ознакомиться с договором",
+                            required:
+                                "Необходимо ознакомиться с договором",
                         })}
                     />
-                    Ознакомлен с договором
+
+                    <span>
+                        Я подтверждаю что ознакомился(-ась)
+                        с Договором-офертой
+                    </span>
                 </label>
 
                 {errors.contractAgreement && (
-                    <span>{errors.contractAgreement.message}</span>
+                    <span className={styles.error}>
+                        {errors.contractAgreement.message}
+                    </span>
                 )}
 
                 <label>
@@ -152,9 +216,13 @@ export function SignupForm() {
                         type="checkbox"
                         {...register("marketingAgreement")}
                     />
-                    Даю согласие на получение маркетинговой информации
+
+                    <span>
+                        Даю согласие на получение рекламных
+                        и информационных рассылок
+                    </span>
                 </label>
-            </form>
-        </>
-    )
-};
+            </div>
+        </form>
+    );
+}

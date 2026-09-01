@@ -1,17 +1,29 @@
 import { Link } from "react-router-dom";
-import { SocialAuth } from "@/features/social-auth";
+
 import { LoginForm } from "@/features/login";
+import { SocialAuth } from "@/features/social-auth";
+import { AuthLayout } from "@/widgets/auth-layout";
+
+import styles from "./LoginPage.module.css";
 
 export function LoginPage() {
     return (
-        <>
-            <LoginForm />
+        <AuthLayout>
+            <div className={styles.container}>
+                <h1>Вход в личный кабинет</h1>
 
-            <SocialAuth />
+                <LoginForm />
 
-            <Link to="/auth/signup">
-                Зарегистрироваться
-            </Link>
-        </>
-    )
-};
+                <SocialAuth />
+
+                <div className={styles.switch}>
+                    <span>Нет аккаунта?</span>
+
+                    <Link to="/auth/signup">
+                        Зарегистрироваться
+                    </Link>
+                </div>
+            </div>
+        </AuthLayout>
+    );
+}

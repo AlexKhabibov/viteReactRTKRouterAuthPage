@@ -1,7 +1,10 @@
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
+
 import { useLoginMutation } from "../../api/loginApi";
 import { setAccessToken } from "@/shared/api/lib";
+
+import styles from "./LoginForm.module.css";
 
 interface LoginFormData {
     email: string;
@@ -9,14 +12,15 @@ interface LoginFormData {
 }
 
 export function LoginForm() {
-
     const navigate = useNavigate();
 
     const [login, { isLoading, error }] = useLoginMutation();
 
-    const { register,
+    const {
+        register,
         handleSubmit,
-        formState: { errors }, } = useForm<LoginFormData>();
+        formState: { errors },
+    } = useForm<LoginFormData>();
 
     const onSubmit = async (data: LoginFormData) => {
         try {
@@ -27,63 +31,94 @@ export function LoginForm() {
 
             setAccessToken(result.access_token);
 
-            console.log(result.access_token);
-            console.log(result);
-
-            navigate('/dashboard');
-
+            navigate("/dashboard");
         } catch (error) {
             console.log(error);
         }
     };
 
-    if (isLoading) return <h1>Загрузка...</h1>
-    if (error) return <h1> Ошибка</h1>
+    if (isLoading) {
+        return <h1>Загрузка...</h1>;
+    }
+
+    if (error) {
+        return <h1>Ошибка</h1>;
+    }
 
     return (
-        <>
-            <form onSubmit={handleSubmit(onSubmit)}>
+        <form
+            className={styles.form}
+            onSubmit={handleSubmit(onSubmit)}
+        >
+            <div className={styles.field}>
+                <label htmlFor="email">
+                    Электронная почта
+                </label>
+
                 <input
+                    id="email"
                     type="email"
+                    placeholder="Введите электронную почту"
                     {...register("email", {
                         required: "Введите email",
                         pattern: {
                             value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
                             message: "Введите корректный email",
                         },
-                    })} />
+                    })}
+                />
 
                 {errors.email && (
-                    <span>{errors.email.message}</span>
+                    <span className={styles.error}>
+                        {errors.email.message}
+                    </span>
                 )}
+            </div>
+
+            <div className={styles.field}>
+                <label htmlFor="password">
+                    Пароль
+                </label>
 
                 <input
+                    id="password"
                     type="password"
+                    placeholder="Введите пароль"
                     {...register("password", {
                         required: "Введите пароль",
                         minLength: {
                             value: 8,
-                            message: "Пароль должен содержать минимум 8 символов",
+                            message:
+                                "Пароль должен содержать минимум 8 символов",
                         },
                         pattern: {
                             value: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]+$/,
-                            message: "Пароль должен содержать латинские буквы и цифры",
+                            message:
+                                "Пароль должен содержать латинские буквы и цифры",
                         },
-                    })} />
+                    })}
+                />
 
                 {errors.password && (
-                    <span>{errors.password.message}</span>
+                    <span className={styles.error}>
+                        {errors.password.message}
+                    </span>
                 )}
 
-                <Link to="/auth/forgot-password">
+                <Link
+                    className={styles.forgotPassword}
+                    to="/auth/forgot-password"
+                >
                     Забыли пароль?
                 </Link>
+            </div>
 
-                <button type="submit">
-                    Войти
-                </button>
-
-            </form>
-        </>
-    )
-};
+            <button
+                className={styles.submit}
+                type="submit"
+            >
+                Вход
+            </button>
+        </form>
+    );
+}

@@ -1,0 +1,147 @@
+.layout {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 42% 58%;
+    background-color: #f7f7f7;
+}
+
+.promo {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    padding: 68px 11% 68px;
+
+    background: linear-gradient(180deg,
+            #6415ff 0%,
+            #7510ff 100%);
+
+    color: #ffffff;
+}
+
+.promoTop {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.logo {
+    width: 185px;
+    height: auto;
+    object-fit: contain;
+}
+
+.subtitle {
+    margin: 0;
+
+    font-size: 18px;
+    line-height: 1.4;
+    font-weight: 400;
+}
+
+.promoBottom {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.promoBottom h2 {
+    margin: 0;
+
+    font-size: 28px;
+    line-height: 1.2;
+    font-weight: 400;
+}
+
+.promoBottom ul {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+
+    margin: 0;
+    padding: 0;
+
+    list-style: none;
+}
+
+.promoBottom li {
+    position: relative;
+
+    padding-left: 30px;
+
+    font-size: 18px;
+    line-height: 1.4;
+}
+
+.promoBottom li::before {
+    content: "✓";
+
+    position: absolute;
+    left: 0;
+    top: 0;
+
+    width: 20px;
+    height: 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 2px solid rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
+
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.content {
+    min-height: 100vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 40px 60px;
+}
+
+@media (max-width: 900px) {
+    .layout {
+        grid-template-columns: 1fr;
+    }
+
+    .promo {
+        min-height: auto;
+
+        padding: 40px 32px;
+        gap: 60px;
+    }
+
+    .promoBottom {
+        display: none;
+    }
+
+    .content {
+        min-height: auto;
+
+        padding: 50px 24px;
+    }
+}
+
+@media (max-width: 500px) {
+    .promo {
+        padding: 30px 24px;
+    }
+
+    .logo {
+        width: 150px;
+    }
+
+    .subtitle {
+        font-size: 15px;
+    }
+
+    .content {
+        padding: 32px 16px;
+    }
+}

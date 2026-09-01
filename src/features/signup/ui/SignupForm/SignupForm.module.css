@@ -1,0 +1,113 @@
+.form {
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.field label {
+    font-size: 14px;
+    line-height: 1.4;
+    color: #292929;
+}
+
+.field input[type="text"],
+.field input[type="email"],
+.field input[type="password"] {
+    width: 100%;
+    height: 48px;
+
+    padding: 0 16px;
+
+    border: 1px solid #e1e1e1;
+    border-radius: 12px;
+
+    outline: none;
+
+    background-color: transparent;
+
+    font-size: 14px;
+    color: #222222;
+
+    box-sizing: border-box;
+}
+
+.field input::placeholder {
+    color: #b8b8c5;
+}
+
+.field input:focus {
+    border-color: #6d00ff;
+}
+
+.error {
+    font-size: 12px;
+    color: #e53935;
+}
+
+.submit {
+    width: 100%;
+    height: 48px;
+
+    margin-top: 4px;
+
+    border: none;
+    border-radius: 12px;
+
+    background-color: #6d00ff;
+
+    color: #ffffff;
+
+    font-size: 16px;
+
+    cursor: pointer;
+
+    transition: background-color 0.2s ease;
+}
+
+.submit:hover {
+    background-color: #5c00d9;
+}
+
+.agreements {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    font-size: 12px;
+    line-height: 1.4;
+
+    color: #777777;
+}
+
+.agreements p {
+    margin: -4px 0 4px;
+}
+
+.agreements label {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+
+    cursor: pointer;
+}
+
+.agreements input[type="checkbox"] {
+    flex-shrink: 0;
+
+    width: 18px;
+    height: 18px;
+
+    margin: 0;
+
+    accent-color: #6d00ff;
+
+    cursor: pointer;
+}
