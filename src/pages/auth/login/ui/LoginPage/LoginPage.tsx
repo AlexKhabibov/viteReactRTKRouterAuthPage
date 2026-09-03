@@ -1,9 +1,7 @@
 import { Link } from "react-router-dom";
-
 import { LoginForm } from "@/features/login";
 import { SocialAuth } from "@/features/social-auth";
 import { AuthLayout } from "@/widgets/auth-layout";
-
 import styles from "./LoginPage.module.css";
 
 export function LoginPage() {

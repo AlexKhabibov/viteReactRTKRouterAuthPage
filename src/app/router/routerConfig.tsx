@@ -1,12 +1,12 @@
+import { createBrowserRouter } from "react-router-dom";
 import { DashboardPage } from "@/pages/dashboard";
 import { LoginPage } from "@/pages/auth/login";
 import { SignupPage } from "@/pages/auth/signup";
 import { ForgotPasswordPage } from "@/pages/auth/forgot-password";
 import { ResetPasswordPage } from "@/pages/auth/reset-password";
-import { createBrowserRouter } from "react-router-dom";
+import { ProfileEditPage, ProfileViewPage } from "@/pages/profile";
 import { ProtectedRoute } from "./ProtectedRoute";
 import { DashboardLayout } from "../layouts/dashboard/DashboardLayout";
-import { ProfilePage } from "@/pages/profile";
 
 export const router = createBrowserRouter([
     {
@@ -30,19 +30,25 @@ export const router = createBrowserRouter([
             },
         ],
     },
+
     {
         element: <ProtectedRoute />,
         children: [
             {
+                path: "/dashboard",
                 element: <DashboardLayout />,
                 children: [
                     {
-                        path: "/dashboard",
+                        index: true,
                         element: <DashboardPage />,
                     },
                     {
-                        path: "/dashboard/profile",
-                        element: <ProfilePage />,
+                        path: "profile",
+                        element: <ProfileViewPage />,
+                    },
+                    {
+                        path: "profile/edit",
+                        element: <ProfileEditPage />,
                     },
                 ],
             },

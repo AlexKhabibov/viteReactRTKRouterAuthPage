@@ -1,4 +1,4 @@
-import { useGetProfileQuery } from "@/features/profile";
+import { useGetProfileQuery } from "@/features/get-profile";
 
 import styles from "./Header.module.css";
 

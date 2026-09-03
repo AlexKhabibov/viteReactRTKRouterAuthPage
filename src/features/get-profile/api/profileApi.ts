@@ -1,6 +1,6 @@
 import { baseApi } from "@/shared/api/baseApi";
 
-interface Profile {
+export interface Profile {
     id: string;
     username: string;
     email: string;
@@ -12,6 +12,7 @@ interface Profile {
     avatarUrl: string;
     updatedAt: string;
     createdAt: string;
+
     userRoles: {
         id: number;
         name: string;
@@ -20,8 +21,28 @@ interface Profile {
             name: string;
         }[];
     }[];
+
     isVerified: boolean;
     isEmailNotificationsEnable: boolean;
+
+    profiles: {
+        id: string;
+        userId: string;
+        profileType: number;
+        specializationId: number;
+        markingWeight: number;
+        description: string;
+        image_src: string;
+        isActive: boolean;
+        ratingPoints: number;
+
+        profileSkills: {
+            id: number;
+            title: string;
+            description: string;
+            imageSrc: string;
+        }[];
+    }[];
 }
 
 export const profileApi = baseApi.injectEndpoints({

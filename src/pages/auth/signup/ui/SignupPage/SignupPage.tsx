@@ -2,7 +2,6 @@ import { Link } from "react-router-dom";
 import { SocialAuth } from "@/features/social-auth";
 import { SignupForm } from "@/features/signup";
 import { AuthLayout } from "@/widgets/auth-layout";
-
 import styles from "./SignupPage.module.css";
 
 export function SignupPage() {

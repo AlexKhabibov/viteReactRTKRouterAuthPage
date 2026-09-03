@@ -1,4 +1,4 @@
-import { useGetProfileQuery } from "@/features/profile";
+import { useGetProfileQuery } from "@/features/get-profile";
 
 export function DashboardPage() {
     const { data, isLoading, error } = useGetProfileQuery();

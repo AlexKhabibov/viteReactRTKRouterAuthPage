@@ -1,0 +1,1 @@
+export { useGetSkillsQuery } from './api/skillsApi'

@@ -1,1 +1,0 @@
-export { ProfileSkills } from "./ui/ProfileSkills";
