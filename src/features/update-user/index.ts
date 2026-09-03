@@ -1,0 +1,1 @@
+export { useUpdateUserMutation } from './api/userApi'
