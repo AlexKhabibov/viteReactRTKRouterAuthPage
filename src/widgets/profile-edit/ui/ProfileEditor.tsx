@@ -18,9 +18,9 @@ export const ProfileEditor = ({ profile }: ProfileEditorProps) => {
         <div>
             <ProfileTabs step={step} onChange={setStep} />
 
-            {step === "personal" && <EditPersonalInfoForm />}
-            {step === "about" && <EditAboutForm />}
-            {step === "skills" && <EditSkillsForm />}
+            {step === "personal" && <EditPersonalInfoForm profile={profile} />}
+            {step === "about" && <EditAboutForm profile={profile} />}
+            {step === "skills" && <EditSkillsForm profile={profile} />}
 
             <button
                 type="button"
