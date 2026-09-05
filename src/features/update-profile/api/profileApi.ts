@@ -29,6 +29,7 @@ export const updateProfileApi = baseApi.injectEndpoints({
                 method: "PUT",
                 body: data,
             }),
+            invalidatesTags: ["Profile"],
         }),
     }),
 });

@@ -52,6 +52,7 @@ export const profileApi = baseApi.injectEndpoints({
                 url: "/auth/profile",
                 method: "GET",
             }),
+            providesTags: ["Profile"],
         }),
     }),
 });
