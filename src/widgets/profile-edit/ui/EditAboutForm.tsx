@@ -28,6 +28,7 @@ export const EditAboutForm = ({ profile }: EditAboutFormProps) => {
             id: professionalProfile.id,
             data: {
                 userId: profile.id,
+                specializationId: professionalProfile.specializationId,
                 markingWeight: professionalProfile.markingWeight,
                 description,
                 socialNetwork: [],

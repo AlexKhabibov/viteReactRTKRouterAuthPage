@@ -7,6 +7,7 @@ interface SocialNetwork {
 
 interface UpdateProfileRequest {
     userId: string;
+    specializationId: number;
     markingWeight: number;
     description: string;
     socialNetwork: SocialNetwork[];
