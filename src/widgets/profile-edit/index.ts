@@ -1,1 +1,5 @@
 export { ProfileEditor } from './ui/ProfileEditor'
+export { EditAboutForm } from './ui/EditAboutForm'
+export { EditPersonalInfoForm } from './ui/EditPersonalInfoForm'
+export { EditSkillsForm } from './ui/EditSkillsForm'
+export { ProfileTabs } from './ui/ProfileTabs'

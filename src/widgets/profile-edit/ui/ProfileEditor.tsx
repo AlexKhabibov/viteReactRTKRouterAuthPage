@@ -1,9 +1,9 @@
 import { useState } from "react";
+import type { Profile } from "@/features/get-profile/api/profileApi";
 import { ProfileTabs } from "./ProfileTabs";
 import { EditPersonalInfoForm } from "./EditPersonalInfoForm";
 import { EditAboutForm } from "./EditAboutForm";
 import { EditSkillsForm } from "./EditSkillsForm";
-import type { Profile } from "@/features/get-profile/api/profileApi";
 
 type ProfileStep = "personal" | "about" | "skills";
 
