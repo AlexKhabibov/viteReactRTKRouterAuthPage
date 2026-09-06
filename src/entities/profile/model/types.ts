@@ -1,19 +1,14 @@
-// export interface Profile {
-//     id: string;
-//     userId: string;
-//     profileType: number;
-//     specializationId: number;
-//     markingWeight: number;
-//     description: string;
-//     image_src: string;
-//     isActive: boolean;
-//     ratingPoints: number;
-//     profileSkills: ProfileSkill[];
-// }
+export interface SocialNetworks {
+    vk: string;
+    instagram: string;
+    facebook: string;
+    linkedin: string;
+    telegram: string;
+    github: string;
+    whatsapp: string;
+}
 
-// export interface ProfileSkill {
-//     id: number;
-//     title: string;
-//     description: string;
-//     imageSrc: string;
-// }
+export interface ProfileState {
+    specialistLevel: string;
+    socialNetworks: SocialNetworks;
+}
