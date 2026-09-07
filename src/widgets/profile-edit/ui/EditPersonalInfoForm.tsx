@@ -3,6 +3,10 @@ import type { Profile } from "@/features/get-profile/api/profileApi";
 import { useUpdateUserMutation } from "@/features/update-user";
 import { useGetSpecializationsQuery } from "@/features/get-specializations";
 import { useUpdateProfileMutation } from "@/features/update-profile";
+import { useDispatch, useSelector } from "react-redux";
+import type { RootState } from "@/app/store/store";
+import { setEmail, setPhone } from "@/entities/user/model/userSlice";
+import { setSocialNetworks, setSpecialistLevel } from "@/entities/profile/model/profileSlice";
 
 interface EditPersonalInfoFormProps {
     profile: Profile;
@@ -12,13 +16,37 @@ interface PersonalInfoForm {
     username: string;
     country: string;
     city: string;
+    email: string;
+    phone: string;
     birthday: string;
     address: string;
     avatar: FileList;
     specializationId: number | undefined;
+    specialistLevel: string; // вопрос
+    socialNetworks: {
+        vk: string;
+        instagram: string;
+        facebook: string;
+        linkedin: string;
+        telegram: string;
+        github: string;
+        whatsapp: string;
+    };
 }
 
 export const EditPersonalInfoForm = ({ profile }: EditPersonalInfoFormProps) => {
+
+    const socialNetworks = useSelector(
+        (state: RootState) => state.profile.socialNetworks
+    );
+
+    const dispatch = useDispatch();
+
+    const email = useSelector((state: RootState) => state.user.email);
+    const phone = useSelector((state: RootState) => state.user.phone);
+    const specialistLevel = useSelector(
+        (state: RootState) => state.profile.specialistLevel
+    );
 
     const { data: specializations, isLoading: isSpecializationsLoading } =
         useGetSpecializationsQuery();
@@ -30,9 +58,13 @@ export const EditPersonalInfoForm = ({ profile }: EditPersonalInfoFormProps) => 
             username: profile.username ?? "",
             country: profile.country ?? "",
             city: profile.city ?? "",
+            email: email || profile.email || "",
+            phone: phone || profile.phone || "",
             birthday: profile.birthday?.slice(0, 10) ?? "",
             address: profile.address ?? "",
             specializationId: currentSpecializationId,
+            specialistLevel,
+            socialNetworks,
         },
     });
 
@@ -45,6 +77,11 @@ export const EditPersonalInfoForm = ({ profile }: EditPersonalInfoFormProps) => 
 
         if (!professionalProfile) return;
         if (data.specializationId === undefined) return;
+
+        dispatch(setEmail(data.email));
+        dispatch(setPhone(data.phone));
+        dispatch(setSpecialistLevel(data.specialistLevel));
+        dispatch(setSocialNetworks(data.socialNetworks));
 
         const file = data.avatar?.[0];
 
@@ -122,6 +159,16 @@ export const EditPersonalInfoForm = ({ profile }: EditPersonalInfoFormProps) => 
             </div>
 
             <div>
+                <label>Email</label>
+                <input type="email" {...register("email")} />
+            </div>
+
+            <div>
+                <label>Телефон</label>
+                <input type="tel" {...register("phone")} />
+            </div>
+
+            <div>
                 <label>Дата рождения</label>
                 <input
                     type="date"
@@ -149,6 +196,46 @@ export const EditPersonalInfoForm = ({ profile }: EditPersonalInfoFormProps) => 
                         </option>
                     ))}
                 </select>
+            </div>
+
+            <div>
+                <label>Уровень специалиста</label>
+                <input {...register("specialistLevel")} />
+            </div>
+
+            <div>
+                <label>VK</label>
+                <input {...register("socialNetworks.vk")} />
+            </div>
+
+            <div>
+                <label>Instagram</label>
+                <input {...register("socialNetworks.instagram")} />
+            </div>
+
+            <div>
+                <label>Facebook</label>
+                <input {...register("socialNetworks.facebook")} />
+            </div>
+
+            <div>
+                <label>LinkedIn</label>
+                <input {...register("socialNetworks.linkedin")} />
+            </div>
+
+            <div>
+                <label>Telegram</label>
+                <input {...register("socialNetworks.telegram")} />
+            </div>
+
+            <div>
+                <label>GitHub</label>
+                <input {...register("socialNetworks.github")} />
+            </div>
+
+            <div>
+                <label>WhatsApp</label>
+                <input {...register("socialNetworks.whatsapp")} />
             </div>
 
             <button
