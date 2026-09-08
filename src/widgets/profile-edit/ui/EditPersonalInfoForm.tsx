@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "@/app/store/store";
 import { setEmail, setPhone } from "@/entities/user/model/userSlice";
 import { setSocialNetworks, setSpecialistLevel } from "@/entities/profile/model/profileSlice";
+import { useEffect, useState } from "react";
 
 interface EditPersonalInfoFormProps {
     profile: Profile;
@@ -36,6 +37,24 @@ interface PersonalInfoForm {
 
 export const EditPersonalInfoForm = ({ profile }: EditPersonalInfoFormProps) => {
 
+    const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
+    const previewUrl = selectedFile
+        ? URL.createObjectURL(selectedFile)
+        : profile.avatarUrl ?? null;
+
+    useEffect(() => {
+        if (!selectedFile) {
+            return;
+        }
+
+        const url = URL.createObjectURL(selectedFile);
+
+        return () => {
+            URL.revokeObjectURL(url);
+        };
+    }, [selectedFile]);
+
     const socialNetworks = useSelector(
         (state: RootState) => state.profile.socialNetworks
     );
@@ -44,9 +63,7 @@ export const EditPersonalInfoForm = ({ profile }: EditPersonalInfoFormProps) => 
 
     const email = useSelector((state: RootState) => state.user.email);
     const phone = useSelector((state: RootState) => state.user.phone);
-    const specialistLevel = useSelector(
-        (state: RootState) => state.profile.specialistLevel
-    );
+    const specialistLevel = useSelector((state: RootState) => state.profile.specialistLevel);
 
     const { data: specializations, isLoading: isSpecializationsLoading } =
         useGetSpecializationsQuery();
@@ -71,6 +88,37 @@ export const EditPersonalInfoForm = ({ profile }: EditPersonalInfoFormProps) => 
     const [updateUser, { isLoading }] = useUpdateUserMutation();
     const [updateProfile, { isLoading: isProfileUpdating }] = useUpdateProfileMutation();
 
+    const handleFileSelect = (file: File) => {
+        if (!file.type.startsWith("image/")) {
+            return;
+        }
+        setSelectedFile(file);
+    };
+
+    const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
+        event.preventDefault();
+
+        const file = event.dataTransfer.files[0];
+
+        if (file) {
+            handleFileSelect(file);
+        }
+    };
+
+    const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
+        event.preventDefault();
+    };
+
+    const handleDeleteAvatar = async () => {
+
+        await updateUser({
+            id: profile.id,
+            data: {
+                avatarUrl: null,
+            },
+        }).unwrap();
+    };
+
     const onSubmit = async (data: PersonalInfoForm) => {
 
         const professionalProfile = profile.profiles[0];
@@ -83,7 +131,7 @@ export const EditPersonalInfoForm = ({ profile }: EditPersonalInfoFormProps) => 
         dispatch(setSpecialistLevel(data.specialistLevel));
         dispatch(setSocialNetworks(data.socialNetworks));
 
-        const file = data.avatar?.[0];
+        const file = selectedFile;
 
         let avatarImage: string | undefined;
 
@@ -138,15 +186,55 @@ export const EditPersonalInfoForm = ({ profile }: EditPersonalInfoFormProps) => 
             </div>
 
             <div>
-                <label htmlFor="avatar">Фото</label>
+                <label>Фото</label>
 
-                <input
-                    id="avatar"
-                    type="file"
-                    accept="image/*"
-                    {...register("avatar")}
-                />
+                <div
+                    onDragOver={handleDragOver}
+                    onDrop={handleDrop}
+                >
+                    {previewUrl ? (
+                        <img
+                            src={previewUrl}
+                            alt="Аватар"
+                            width={120}
+                            height={120}
+                        />
+                    ) : (
+                        <div>
+                            Перетащите фото сюда
+                        </div>
+                    )}
+
+                    <label htmlFor="avatar">
+                        Выбрать файл
+                    </label>
+
+                    <input
+                        id="avatar"
+                        type="file"
+                        accept="image/*"
+                        {...register("avatar")}
+                        onChange={(event) => {
+                            const file = event.target.files?.[0];
+
+                            if (file) {
+                                handleFileSelect(file);
+                            }
+                        }}
+                    />
+
+                    {profile.avatarUrl && (
+                        <button
+                            type="button"
+                            onClick={handleDeleteAvatar}
+                            disabled={isLoading}
+                        >
+                            Удалить фото
+                        </button>
+                    )}
+                </div>
             </div>
+
 
             <div>
                 <label>Страна</label>

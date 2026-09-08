@@ -5,32 +5,43 @@ import { EditPersonalInfoForm } from "./EditPersonalInfoForm";
 import { EditAboutForm } from "./EditAboutForm";
 import { EditSkillsForm } from "./EditSkillsForm";
 
-type ProfileStep = "personal" | "about" | "skills";
-
 interface ProfileEditorProps {
     profile: Profile;
 }
 
 export const ProfileEditor = ({ profile }: ProfileEditorProps) => {
-    const [step, setStep] = useState<ProfileStep>("personal");
+    const [activeTab, setActiveTab] = useState(0);
+
+    const handleNext = () => {
+        if (activeTab < 2) {
+            setActiveTab((prev) => prev + 1);
+        }
+    };
 
     return (
         <div>
-            <ProfileTabs step={step} onChange={setStep} />
+            <ProfileTabs
+                activeTab={activeTab}
+                onChange={setActiveTab}
+            />
 
-            {step === "personal" && <EditPersonalInfoForm profile={profile} />}
-            {step === "about" && <EditAboutForm profile={profile} />}
-            {step === "skills" && <EditSkillsForm profile={profile} />}
+            {activeTab === 0 && (
+                <EditPersonalInfoForm profile={profile} />
+            )}
 
-            <button
-                type="button"
-                onClick={() => {
-                    if (step === "personal") setStep("about");
-                    if (step === "about") setStep("skills");
-                }}
-            >
-                Далее
-            </button>
+            {activeTab === 1 && (
+                <EditAboutForm profile={profile} />
+            )}
+
+            {activeTab === 2 && (
+                <EditSkillsForm profile={profile} />
+            )}
+
+            {activeTab < 2 ? (
+                <button type="button" onClick={handleNext}>
+                    Далее
+                </button>
+            ) : null}
         </div>
     );
 };

@@ -1,51 +1,34 @@
-type ProfileStep = "personal" | "about" | "skills";
-
 interface ProfileTabsProps {
-    step: ProfileStep;
-    onChange: (step: ProfileStep) => void;
+    activeTab: number;
+    onChange: (tab: number) => void;
 }
 
+const tabs = [
+    "Личная информация",
+    "Обо мне",
+    "Навыки",
+    "Проекты",
+    "Опыт работы",
+    "Образование",
+];
+
 export const ProfileTabs = ({
-    step,
+    activeTab,
     onChange,
 }: ProfileTabsProps) => {
     return (
-        <div>
-            <button
-                type="button"
-                onClick={() => onChange("personal")}
-                disabled={step === "personal"}
-            >
-                Личная информация
-            </button>
-
-            <button
-                type="button"
-                onClick={() => onChange("about")}
-                disabled={step === "about"}
-            >
-                Обо мне
-            </button>
-
-            <button
-                type="button"
-                onClick={() => onChange("skills")}
-                disabled={step === "skills"}
-            >
-                Навыки
-            </button>
-
-            <button type="button" disabled>
-                Проекты
-            </button>
-
-            <button type="button" disabled>
-                Опыт работы
-            </button>
-
-            <button type="button" disabled>
-                Образование
-            </button>
-        </div>
+        <nav>
+            {tabs.map((tab, index) => (
+                <button
+                    key={tab}
+                    type="button"
+                    onClick={() => onChange(index)}
+                    disabled={index > 2}
+                    className={activeTab === index ? "active" : ""}
+                >
+                    {tab}
+                </button>
+            ))}
+        </nav>
     );
 };

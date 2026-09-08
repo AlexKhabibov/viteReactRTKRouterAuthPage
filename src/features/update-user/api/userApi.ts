@@ -6,7 +6,7 @@ interface UpdateUserRequest {
     city?: string;
     birthday?: string;
     address?: string;
-    avatarUrl?: string;
+    avatarUrl?: string | null;
     avatarImage?: string;
 }
 
@@ -21,6 +21,7 @@ export const userApi = baseApi.injectEndpoints({
                 method: "PATCH",
                 body: data,
             }),
+            invalidatesTags: ["Profile"],
         }),
     }),
 });
