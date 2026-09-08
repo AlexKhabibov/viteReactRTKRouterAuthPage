@@ -3,7 +3,11 @@ import { useGetSpecializationsQuery } from "@/features/get-specializations";
 import { ViewPersonalInfo } from "./ViewPersonalInfo";
 import { ViewAbout } from "./ViewAbout";
 import { ViewSkills } from "./ViewSkills";
+import { ProfileCompletion } from "./ProfileCompletion";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import type { RootState } from "@/app/store/store";
+import { calculateProfileCompletion } from "../model/calculateProfileCompletion";
 
 interface ProfileViewProps {
     profile: Profile;
@@ -11,6 +15,8 @@ interface ProfileViewProps {
 
 export const ProfileView = ({ profile }: ProfileViewProps) => {
     const navigate = useNavigate();
+
+    const state = useSelector((state: RootState) => state);
 
     const { data: specializations } = useGetSpecializationsQuery();
 
@@ -20,13 +26,20 @@ export const ProfileView = ({ profile }: ProfileViewProps) => {
         (item) => item.id === professionalProfile.specializationId
     );
 
-    function handleClick() {
-        navigate('/dashboard/profile/edit')
+    const completion = calculateProfileCompletion(profile, state);
+
+    function handleEdit() {
+        navigate("/dashboard/profile/edit");
     }
 
     return (
         <div>
             <h1>Мой профиль</h1>
+
+            <ProfileCompletion
+                percentage={completion}
+                onEdit={handleEdit}
+            />
 
             <ViewPersonalInfo
                 profile={profile}
@@ -36,8 +49,6 @@ export const ProfileView = ({ profile }: ProfileViewProps) => {
             <ViewAbout profile={profile} />
 
             <ViewSkills profile={profile} />
-
-            <button onClick={handleClick}>Редактировать профиль</button>
         </div>
     );
 };
