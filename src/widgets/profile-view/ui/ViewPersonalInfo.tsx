@@ -2,6 +2,7 @@ import { useSelector } from "react-redux";
 import type { RootState } from "@/app/store/store";
 import type { Profile } from "@/features/get-profile/api/profileApi";
 import type { Specializations } from "@/features/get-specializations/api/specializationsApi";
+import styles from "./ViewPersonalInfo.module.css";
 
 interface ViewPersonalInfoProps {
     profile: Profile;
@@ -23,88 +24,79 @@ export const ViewPersonalInfo = ({
         (state: RootState) => state.profile.socialNetworks
     );
 
+    const socials = Object.entries(socialNetworks).filter(
+        ([, value]) => Boolean(value)
+    );
+
     return (
-        <section>
-            <h2>Личная информация</h2>
-
-            <div>
-                <span>Имя пользователя</span>
-                <span>{profile.username}</span>
-            </div>
-
-            <div>
-                <span>Email</span>
-                <span>{email || profile.email}</span>
-            </div>
-
-            <div>
-                <span>Специализация</span>
-                <span>{specialization?.title ?? "Не указана"}</span>
-            </div>
-
-            <div>
-                <span>Уровень специалиста</span>
-                <span>{specialistLevel || "Не указан"}</span>
-            </div>
-
-            <div>
-                <span>Телефон</span>
-                <span>{phone || profile.phone}</span>
-            </div>
-
-            <div>
-                <span>Страна</span>
-                <span>{profile.country}</span>
-            </div>
-
-            <div>
-                <span>Город</span>
-                <span>{profile.city}</span>
-            </div>
-
-            <div>
-                <span>Адрес</span>
-                <span>{profile.address}</span>
-            </div>
-
-            <div>
-                <span>Дата рождения</span>
-                <span>{profile.birthday}</span>
-            </div>
-
-            <div>
-                <span>Социальные сети</span>
-
-                {socialNetworks.vk && (
-                    <div>VK: {socialNetworks.vk}</div>
+        <section className={styles.card}>
+            <div className={styles.avatarWrapper}>
+                {profile.avatarUrl ? (
+                    <img
+                        className={styles.avatar}
+                        src={profile.avatarUrl}
+                        alt={profile.username}
+                    />
+                ) : (
+                    <div className={styles.avatarPlaceholder}>
+                        Нет фото
+                    </div>
                 )}
+            </div>
 
-                {socialNetworks.instagram && (
-                    <div>Instagram: {socialNetworks.instagram}</div>
-                )}
+            <div className={styles.content}>
+                <div className={styles.nameRow}>
+                    <h2 className={styles.name}>
+                        {profile.username}
+                    </h2>
 
-                {socialNetworks.facebook && (
-                    <div>Facebook: {socialNetworks.facebook}</div>
-                )}
+                    <span className={styles.status}>
+                        Кандидат
+                    </span>
+                </div>
 
-                {socialNetworks.linkedin && (
-                    <div>LinkedIn: {socialNetworks.linkedin}</div>
-                )}
+                <div className={styles.specialization}>
+                    {specialization?.title ?? "Специализация не указана"}
+                </div>
 
-                {socialNetworks.telegram && (
-                    <div>Telegram: {socialNetworks.telegram}</div>
-                )}
+                <div className={styles.details}>
+                    {specialistLevel && (
+                        <span>{specialistLevel}</span>
+                    )}
 
-                {socialNetworks.github && (
-                    <div>GitHub: {socialNetworks.github}</div>
-                )}
+                    {profile.country && (
+                        <span>
+                            {profile.city
+                                ? `${profile.city}, ${profile.country}`
+                                : profile.country}
+                        </span>
+                    )}
+                </div>
 
-                {socialNetworks.whatsapp && (
-                    <div>WhatsApp: {socialNetworks.whatsapp}</div>
-                )}
+                <div className={styles.contacts}>
+                    {(phone || profile.phone) && (
+                        <span>{phone || profile.phone}</span>
+                    )}
 
-                {!Object.values(socialNetworks).some(Boolean) && (
-                    <div>Не указаны</div>
+                    {(email || profile.email) && (
+                        <span>{email || profile.email}</span>
+                    )}
+                </div>
+
+                {socials.length > 0 && (
+                    <div className={styles.socials}>
+                        {socials.map(([name, value]) => (
+                            <a
+                                key={name}
+                                href={value}
+                                target="_blank"
+                                rel="noreferrer"
+                                className={styles.social}
+                            >
+                                {name}
+                            </a>
+                        ))}
+                    </div>
                 )}
             </div>
         </section>

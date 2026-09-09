@@ -1,16 +1,19 @@
-.avatar {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    object-fit: cover;
+.page {
+    min-height: 100%;
+    padding: 24px 32px 48px;
+    background: #f7f7f7;
 }
 
-.avatarPlaceholder {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
+.container {
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.title {
+    margin: 0 0 20px;
+    font-size: 24px;
+    line-height: 1.2;
+    font-weight: 500;
+    color: #222;
 }

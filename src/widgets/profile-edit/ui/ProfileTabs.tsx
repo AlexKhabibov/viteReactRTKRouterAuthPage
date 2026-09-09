@@ -1,3 +1,5 @@
+import styles from "./ProfileTabs.module.css";
+
 interface ProfileTabsProps {
     activeTab: number;
     onChange: (tab: number) => void;
@@ -17,14 +19,17 @@ export const ProfileTabs = ({
     onChange,
 }: ProfileTabsProps) => {
     return (
-        <nav>
+        <nav className={styles.tabs}>
             {tabs.map((tab, index) => (
                 <button
                     key={tab}
                     type="button"
                     onClick={() => onChange(index)}
                     disabled={index > 2}
-                    className={activeTab === index ? "active" : ""}
+                    className={`${styles.tab} ${activeTab === index
+                            ? styles.active
+                            : ""
+                        }`}
                 >
                     {tab}
                 </button>

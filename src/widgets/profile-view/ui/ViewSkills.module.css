@@ -1,0 +1,58 @@
+.card {
+    margin-top: 20px;
+    padding: 24px;
+
+    background: #fff;
+    border-radius: 16px;
+
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 18px;
+}
+
+.title {
+    margin: 0;
+
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+}
+
+.editButton {
+    border: 0;
+    background: transparent;
+
+    color: #6c2cff;
+
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.skills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.skill {
+    padding: 8px 14px;
+
+    border: 1px solid #6c2cff;
+    border-radius: 10px;
+
+    color: #333;
+    background: #fff;
+
+    font-size: 14px;
+}
+
+.empty {
+    color: #999;
+    font-size: 14px;
+}

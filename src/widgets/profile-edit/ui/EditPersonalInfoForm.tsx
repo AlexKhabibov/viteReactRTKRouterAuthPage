@@ -1,13 +1,25 @@
+import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
+
 import type { Profile } from "@/features/get-profile/api/profileApi";
 import { useUpdateUserMutation } from "@/features/update-user";
 import { useGetSpecializationsQuery } from "@/features/get-specializations";
 import { useUpdateProfileMutation } from "@/features/update-profile";
-import { useDispatch, useSelector } from "react-redux";
-import type { RootState } from "@/app/store/store";
-import { setEmail, setPhone } from "@/entities/user/model/userSlice";
-import { setSocialNetworks, setSpecialistLevel } from "@/entities/profile/model/profileSlice";
-import { useEffect, useState } from "react";
+
+import type { RootState, AppDispatch } from "@/app/store/store";
+
+import {
+    setEmail,
+    setPhone,
+} from "@/entities/user/model/userSlice";
+
+import {
+    setSocialNetworks,
+    setSpecialistLevel,
+} from "@/entities/profile/model/profileSlice";
+
+import styles from "./EditPersonalInfoForm.module.css";
 
 interface EditPersonalInfoFormProps {
     profile: Profile;
@@ -21,9 +33,8 @@ interface PersonalInfoForm {
     phone: string;
     birthday: string;
     address: string;
-    avatar: FileList;
     specializationId: number | undefined;
-    specialistLevel: string; // вопрос
+    specialistLevel: string;
     socialNetworks: {
         vk: string;
         instagram: string;
@@ -35,67 +46,90 @@ interface PersonalInfoForm {
     };
 }
 
-export const EditPersonalInfoForm = ({ profile }: EditPersonalInfoFormProps) => {
-
+export const EditPersonalInfoForm = ({
+    profile,
+}: EditPersonalInfoFormProps) => {
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
-    const previewUrl = selectedFile
-        ? URL.createObjectURL(selectedFile)
-        : profile.avatarUrl ?? null;
+    const previewUrl = useMemo(() => {
+        if (selectedFile) {
+            return URL.createObjectURL(selectedFile);
+        }
+
+        return profile.avatarUrl ?? null;
+    }, [selectedFile, profile.avatarUrl]);
 
     useEffect(() => {
         if (!selectedFile) {
             return;
         }
 
-        const url = URL.createObjectURL(selectedFile);
-
         return () => {
-            URL.revokeObjectURL(url);
+            URL.revokeObjectURL(previewUrl);
         };
-    }, [selectedFile]);
+    }, [selectedFile, previewUrl]);
+
+    const dispatch = useDispatch<AppDispatch>();
+
+    const email = useSelector(
+        (state: RootState) => state.user.email
+    );
+
+    const phone = useSelector(
+        (state: RootState) => state.user.phone
+    );
+
+    const specialistLevel = useSelector(
+        (state: RootState) => state.profile.specialistLevel
+    );
 
     const socialNetworks = useSelector(
         (state: RootState) => state.profile.socialNetworks
     );
 
-    const dispatch = useDispatch();
+    const {
+        data: specializations,
+    } = useGetSpecializationsQuery();
 
-    const email = useSelector((state: RootState) => state.user.email);
-    const phone = useSelector((state: RootState) => state.user.phone);
-    const specialistLevel = useSelector((state: RootState) => state.profile.specialistLevel);
+    const currentSpecializationId =
+        profile.profiles[0]?.specializationId;
 
-    const { data: specializations, isLoading: isSpecializationsLoading } =
-        useGetSpecializationsQuery();
+    const { register, handleSubmit } =
+        useForm<PersonalInfoForm>({
+            defaultValues: {
+                username: profile.username ?? "",
+                country: profile.country ?? "",
+                city: profile.city ?? "",
+                email: email || profile.email || "",
+                phone: phone || profile.phone || "",
+                birthday:
+                    profile.birthday?.slice(0, 10) ?? "",
+                address: profile.address ?? "",
+                specializationId: currentSpecializationId,
+                specialistLevel,
+                socialNetworks,
+            },
+        });
 
-    const currentSpecializationId = profile.profiles[0]?.specializationId;
+    const [updateUser, { isLoading }] =
+        useUpdateUserMutation();
 
-    const { register, handleSubmit } = useForm<PersonalInfoForm>({
-        defaultValues: {
-            username: profile.username ?? "",
-            country: profile.country ?? "",
-            city: profile.city ?? "",
-            email: email || profile.email || "",
-            phone: phone || profile.phone || "",
-            birthday: profile.birthday?.slice(0, 10) ?? "",
-            address: profile.address ?? "",
-            specializationId: currentSpecializationId,
-            specialistLevel,
-            socialNetworks,
-        },
-    });
-
-    const [updateUser, { isLoading }] = useUpdateUserMutation();
-    const [updateProfile, { isLoading: isProfileUpdating }] = useUpdateProfileMutation();
+    const [
+        updateProfile,
+        { isLoading: isProfileUpdating },
+    ] = useUpdateProfileMutation();
 
     const handleFileSelect = (file: File) => {
         if (!file.type.startsWith("image/")) {
             return;
         }
+
         setSelectedFile(file);
     };
 
-    const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
+    const handleDrop = (
+        event: React.DragEvent<HTMLDivElement>
+    ) => {
         event.preventDefault();
 
         const file = event.dataTransfer.files[0];
@@ -105,26 +139,33 @@ export const EditPersonalInfoForm = ({ profile }: EditPersonalInfoFormProps) => 
         }
     };
 
-    const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
+    const handleDragOver = (
+        event: React.DragEvent<HTMLDivElement>
+    ) => {
         event.preventDefault();
     };
 
     const handleDeleteAvatar = async () => {
-
         await updateUser({
             id: profile.id,
             data: {
                 avatarUrl: null,
             },
         }).unwrap();
+
+        setSelectedFile(null);
     };
 
     const onSubmit = async (data: PersonalInfoForm) => {
-
         const professionalProfile = profile.profiles[0];
 
-        if (!professionalProfile) return;
-        if (data.specializationId === undefined) return;
+        if (!professionalProfile) {
+            return;
+        }
+
+        if (data.specializationId === undefined) {
+            return;
+        }
 
         dispatch(setEmail(data.email));
         dispatch(setPhone(data.phone));
@@ -136,18 +177,22 @@ export const EditPersonalInfoForm = ({ profile }: EditPersonalInfoFormProps) => 
         let avatarImage: string | undefined;
 
         if (file) {
-            avatarImage = await new Promise<string>((resolve, reject) => {
-                const reader = new FileReader();
+            avatarImage = await new Promise<string>(
+                (resolve, reject) => {
+                    const reader = new FileReader();
 
-                reader.onload = () => {
-                    const result = reader.result as string;
-                    resolve(result.split(",")[1]);
-                };
+                    reader.onload = () => {
+                        const result =
+                            reader.result as string;
 
-                reader.onerror = reject;
+                        resolve(result.split(",")[1]);
+                    };
 
-                reader.readAsDataURL(file);
-            });
+                    reader.onerror = reject;
+
+                    reader.readAsDataURL(file);
+                }
+            );
         }
 
         await updateUser({
@@ -156,7 +201,8 @@ export const EditPersonalInfoForm = ({ profile }: EditPersonalInfoFormProps) => 
                 username: data.username,
                 country: data.country,
                 city: data.city || undefined,
-                birthday: data.birthday || undefined,
+                birthday:
+                    data.birthday || undefined,
                 address: data.address,
                 avatarImage,
             },
@@ -166,174 +212,263 @@ export const EditPersonalInfoForm = ({ profile }: EditPersonalInfoFormProps) => 
             id: professionalProfile.id,
             data: {
                 userId: profile.id,
-                specializationId: data.specializationId,
-                markingWeight: professionalProfile.markingWeight,
-                description: professionalProfile.description,
+                specializationId:
+                    data.specializationId,
+                markingWeight:
+                    professionalProfile.markingWeight,
+                description:
+                    professionalProfile.description,
                 socialNetwork: [],
-                image_src: professionalProfile.image_src,
-                profileSkills: professionalProfile.profileSkills.map(
-                    (skill) => String(skill.id)
-                ),
+                image_src:
+                    professionalProfile.image_src,
+                profileSkills:
+                    professionalProfile.profileSkills.map(
+                        (skill) => String(skill.id)
+                    ),
             },
         }).unwrap();
     };
 
+    const socialNetworkFields = Object.keys(
+        socialNetworks
+    ) as Array<keyof PersonalInfoForm["socialNetworks"]>;
+
     return (
-        <form onSubmit={handleSubmit(onSubmit)}>
-            <div>
-                <label>Никнейм</label>
-                <input {...register("username")} />
-            </div>
+        <form
+            className={styles.form}
+            onSubmit={handleSubmit(onSubmit)}
+        >
+            <section className={styles.section}>
+                <div className={styles.sectionInfo}>
+                    <h2>Фото профиля</h2>
 
-            <div>
-                <label>Фото</label>
+                    <p>
+                        Поделитесь своими профилями
+                        <br />
+                        в других соц. сетях
+                    </p>
+                </div>
 
-                <div
-                    onDragOver={handleDragOver}
-                    onDrop={handleDrop}
-                >
-                    {previewUrl ? (
-                        <img
-                            src={previewUrl}
-                            alt="Аватар"
-                            width={120}
-                            height={120}
-                        />
-                    ) : (
-                        <div>
-                            Перетащите фото сюда
+                <div className={styles.photoContent}>
+                    <div className={styles.photoRow}>
+                        <div className={styles.photoColumn}>
+                            {previewUrl ? (
+                                <img
+                                    className={styles.avatar}
+                                    src={previewUrl}
+                                    alt="Фото профиля"
+                                />
+                            ) : (
+                                <div
+                                    className={
+                                        styles.avatarPlaceholder
+                                    }
+                                >
+                                    Фото
+                                </div>
+                            )}
+
+                            <button
+                                type="button"
+                                className={
+                                    styles.deletePhoto
+                                }
+                                onClick={
+                                    handleDeleteAvatar
+                                }
+                            >
+                                Удалить фото
+                            </button>
                         </div>
-                    )}
 
-                    <label htmlFor="avatar">
-                        Выбрать файл
-                    </label>
+                        <div
+                            className={styles.dropzone}
+                            onDrop={handleDrop}
+                            onDragOver={handleDragOver}
+                        >
+                            <span
+                                className={
+                                    styles.uploadIcon
+                                }
+                            >
+                                ↑
+                            </span>
 
-                    <input
-                        id="avatar"
-                        type="file"
-                        accept="image/*"
-                        {...register("avatar")}
-                        onChange={(event) => {
-                            const file = event.target.files?.[0];
+                            <span>
+                                <strong>
+                                    Кликни для изменения
+                                </strong>{" "}
+                                или перетащи сюда фотографию
+                            </span>
 
-                            if (file) {
-                                handleFileSelect(file);
-                            }
-                        }}
-                    />
+                            <small>
+                                JPG, PNG, JPEG (не более 5Мб)
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
-                    {profile.avatarUrl && (
+            <section className={styles.section}>
+                <div className={styles.sectionInfo}>
+                    <h2>
+                        Персональная информация
+                    </h2>
+
+                    <p>
+                        Поделитесь своими профилями
+                        <br />
+                        в других соц. сетях
+                    </p>
+                </div>
+
+                <div className={styles.fields}>
+                    <div className={styles.field}>
+                        <label>Никнейм *</label>
+
+                        <input
+                            {...register("username")}
+                        />
+                    </div>
+
+                    <div className={styles.field}>
+                        <label>Номер для связи</label>
+
+                        <input
+                            {...register("phone")}
+                        />
+                    </div>
+
+                    <div className={styles.field}>
+                        <label>
+                            IT специальность *
+                        </label>
+
+                        <select
+                            {...register(
+                                "specializationId",
+                                {
+                                    valueAsNumber: true,
+                                }
+                            )}
+                        >
+                            {specializations?.data.map(
+                                (specialization) => (
+                                    <option
+                                        key={
+                                            specialization.id
+                                        }
+                                        value={
+                                            specialization.id
+                                        }
+                                    >
+                                        {
+                                            specialization.title
+                                        }
+                                    </option>
+                                )
+                            )}
+                        </select>
+
                         <button
                             type="button"
-                            onClick={handleDeleteAvatar}
-                            disabled={isLoading}
+                            className={
+                                styles.linkButton
+                            }
                         >
-                            Удалить фото
+                            Сменить специальность
                         </button>
-                    )}
+                    </div>
+
+                    <div className={styles.field}>
+                        <label>Локация</label>
+
+                        <input
+                            {...register("city")}
+                        />
+                    </div>
+
+                    <div className={styles.field}>
+                        <label>Email для связи</label>
+
+                        <input
+                            {...register("email")}
+                        />
+                    </div>
+
+                    <div className={styles.field}>
+                        <label>
+                            Уровень специалиста
+                        </label>
+
+                        <select
+                            {...register(
+                                "specialistLevel"
+                            )}
+                        >
+                            <option value="">
+                                Не указан
+                            </option>
+
+                            <option value="Junior">
+                                Junior
+                            </option>
+
+                            <option value="Middle">
+                                Middle
+                            </option>
+
+                            <option value="Senior">
+                                Senior
+                            </option>
+                        </select>
+                    </div>
                 </div>
-            </div>
+            </section>
 
+            <section className={styles.section}>
+                <div className={styles.sectionInfo}>
+                    <h2>Личные ссылки</h2>
 
-            <div>
-                <label>Страна</label>
-                <input {...register("country")} />
-            </div>
+                    <p>
+                        Поделитесь своими профилями
+                        <br />
+                        в других соц. сетях
+                    </p>
+                </div>
 
-            <div>
-                <label>Город</label>
-                <input {...register("city")} />
-            </div>
+                <div className={styles.socialFields}>
+                    {socialNetworkFields.map((network) => (
+                        <div
+                            className={styles.field}
+                            key={network}
+                        >
+                            <label>{network}</label>
 
-            <div>
-                <label>Email</label>
-                <input type="email" {...register("email")} />
-            </div>
-
-            <div>
-                <label>Телефон</label>
-                <input type="tel" {...register("phone")} />
-            </div>
-
-            <div>
-                <label>Дата рождения</label>
-                <input
-                    type="date"
-                    {...register("birthday")}
-                />
-            </div>
-
-            <div>
-                <label>Адрес</label>
-                <input {...register("address")} />
-            </div>
-
-            <div>
-                <label>Специальность</label>
-                <select
-                    {...register("specializationId", {
-                        valueAsNumber: true,
-                    })}
-                    disabled={isSpecializationsLoading}
-                >
-                    <option value="">Выберите специальность</option>
-                    {specializations?.data.map((specialization) => (
-                        <option key={specialization.id} value={specialization.id}>
-                            {specialization.title}
-                        </option>
+                            <input
+                                {...register(`socialNetworks.${network}`)}
+                                placeholder="Ссылка"
+                            />
+                        </div>
                     ))}
-                </select>
-            </div>
+                </div>
+            </section>
 
-            <div>
-                <label>Уровень специалиста</label>
-                <input {...register("specialistLevel")} />
+            <div className={styles.submitRow}>
+                <button
+                    className={styles.saveButton}
+                    type="submit"
+                    disabled={
+                        isLoading ||
+                        isProfileUpdating
+                    }
+                >
+                    {isLoading ||
+                        isProfileUpdating
+                        ? "Сохранение..."
+                        : "Сохранить"}
+                </button>
             </div>
-
-            <div>
-                <label>VK</label>
-                <input {...register("socialNetworks.vk")} />
-            </div>
-
-            <div>
-                <label>Instagram</label>
-                <input {...register("socialNetworks.instagram")} />
-            </div>
-
-            <div>
-                <label>Facebook</label>
-                <input {...register("socialNetworks.facebook")} />
-            </div>
-
-            <div>
-                <label>LinkedIn</label>
-                <input {...register("socialNetworks.linkedin")} />
-            </div>
-
-            <div>
-                <label>Telegram</label>
-                <input {...register("socialNetworks.telegram")} />
-            </div>
-
-            <div>
-                <label>GitHub</label>
-                <input {...register("socialNetworks.github")} />
-            </div>
-
-            <div>
-                <label>WhatsApp</label>
-                <input {...register("socialNetworks.whatsapp")} />
-            </div>
-
-            <button
-                type="submit"
-                disabled={isLoading || isProfileUpdating}
-            >
-                {isLoading || isProfileUpdating
-                    ? "Сохранение..."
-                    : "Сохранить"}
-            </button>
         </form>
     );
 };

@@ -1,0 +1,54 @@
+.form {
+    padding: 30px 0;
+}
+
+.title {
+    margin: 0 0 16px;
+
+    font-size: 15px;
+    font-weight: 500;
+    color: #333;
+}
+
+.textarea {
+    width: 100%;
+    min-height: 220px;
+
+    padding: 14px;
+
+    border: 1px solid #e5e5e5;
+    border-radius: 10px;
+
+    outline: none;
+
+    resize: vertical;
+
+    font-family: inherit;
+    font-size: 13px;
+    line-height: 1.5;
+
+    box-sizing: border-box;
+}
+
+.textarea:focus {
+    border-color: #9c6cff;
+}
+
+.submitRow {
+    display: flex;
+    justify-content: flex-end;
+
+    margin-top: 20px;
+}
+
+.saveButton {
+    padding: 10px 20px;
+
+    border: 0;
+    border-radius: 8px;
+
+    background: #6c2cff;
+    color: #fff;
+
+    cursor: pointer;
+}

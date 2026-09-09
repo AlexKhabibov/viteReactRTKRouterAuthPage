@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import type { RootState } from "@/app/store/store";
 import { calculateProfileCompletion } from "../model/calculateProfileCompletion";
+import styles from "./ProfileView.module.css";
 
 interface ProfileViewProps {
     profile: Profile;
@@ -33,38 +34,24 @@ export const ProfileView = ({ profile }: ProfileViewProps) => {
     }
 
     return (
-        <div>
-            <h1>Мой профиль</h1>
-            <div>
-                {profile.avatarUrl ? (
-                    <img
-                        src={profile.avatarUrl}
-                        alt={profile.username}
-                        style={{
-                            width: 120,
-                            height: 120,
-                            borderRadius: "50%",
-                            objectFit: "cover",
-                        }}
-                    />
-                ) : (
-                    <div>Фото не загружено</div>
-                )}
+        <div className={styles.page}>
+            <div className={styles.container}>
+                <h1 className={styles.title}>Мой профиль</h1>
 
                 <ProfileCompletion
                     percentage={completion}
                     onEdit={handleEdit}
                 />
+
+                <ViewPersonalInfo
+                    profile={profile}
+                    specialization={specialization}
+                />
+
+                <ViewAbout profile={profile} />
+
+                <ViewSkills profile={profile} />
             </div>
-
-            <ViewPersonalInfo
-                profile={profile}
-                specialization={specialization}
-            />
-
-            <ViewAbout profile={profile} />
-
-            <ViewSkills profile={profile} />
         </div>
     );
 };

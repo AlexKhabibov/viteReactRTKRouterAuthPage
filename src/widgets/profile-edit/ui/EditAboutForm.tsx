@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { Profile } from "@/features/get-profile/api/profileApi";
 import { useUpdateProfileMutation } from "@/features/update-profile";
+import styles from './EditAboutForm.module.css'
 
 interface EditAboutFormProps {
     profile: Profile;
@@ -41,20 +42,30 @@ export const EditAboutForm = ({ profile }: EditAboutFormProps) => {
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <div>
-                <label htmlFor="description">Обо мне</label>
+        <form
+            className={styles.form}
+            onSubmit={handleSubmit}
+        >
+            <h2 className={styles.title}>Обо мне</h2>
 
-                <textarea
-                    id="description"
-                    value={description}
-                    onChange={(event) => setDescription(event.target.value)}
-                />
+            <textarea
+                className={styles.textarea}
+                id="description"
+                value={description}
+                onChange={(event) =>
+                    setDescription(event.target.value)
+                }
+            />
+
+            <div className={styles.submitRow}>
+                <button
+                    className={styles.saveButton}
+                    type="submit"
+                    disabled={isLoading}
+                >
+                    {isLoading ? "Сохранение..." : "Сохранить"}
+                </button>
             </div>
-
-            <button type="submit" disabled={isLoading}>
-                {isLoading ? "Сохранение..." : "Сохранить"}
-            </button>
         </form>
     );
 };

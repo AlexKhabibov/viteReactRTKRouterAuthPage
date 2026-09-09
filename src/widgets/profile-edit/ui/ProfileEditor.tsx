@@ -4,6 +4,7 @@ import { ProfileTabs } from "./ProfileTabs";
 import { EditPersonalInfoForm } from "./EditPersonalInfoForm";
 import { EditAboutForm } from "./EditAboutForm";
 import { EditSkillsForm } from "./EditSkillsForm";
+import styles from "./ProfileEditor.module.css";
 
 interface ProfileEditorProps {
     profile: Profile;
@@ -19,29 +20,52 @@ export const ProfileEditor = ({ profile }: ProfileEditorProps) => {
     };
 
     return (
-        <div>
-            <ProfileTabs
-                activeTab={activeTab}
-                onChange={setActiveTab}
-            />
+        <div className={styles.page}>
+            <div className={styles.container}>
+                <h1 className={styles.title}>
+                    Редактирование профиля
+                </h1>
 
-            {activeTab === 0 && (
-                <EditPersonalInfoForm profile={profile} />
-            )}
+                <div className={styles.card}>
+                    <ProfileTabs
+                        activeTab={activeTab}
+                        onChange={setActiveTab}
+                    />
 
-            {activeTab === 1 && (
-                <EditAboutForm profile={profile} />
-            )}
+                    <div className={styles.content}>
+                        {activeTab === 0 && (
+                            <EditPersonalInfoForm
+                                profile={profile}
+                            />
+                        )}
 
-            {activeTab === 2 && (
-                <EditSkillsForm profile={profile} />
-            )}
+                        {activeTab === 1 && (
+                            <EditAboutForm
+                                profile={profile}
+                            />
+                        )}
 
-            {activeTab < 2 ? (
-                <button type="button" onClick={handleNext}>
-                    Далее
-                </button>
-            ) : null}
+                        {activeTab === 2 && (
+                            <EditSkillsForm
+                                profile={profile}
+                            />
+                        )}
+                    </div>
+
+                    {activeTab < 2 && (
+                        <div className={styles.footer}>
+                            <button
+                                className={styles.nextButton}
+                                type="button"
+                                onClick={handleNext}
+                            >
+                                Далее
+                                <span>→</span>
+                            </button>
+                        </div>
+                    )}
+                </div>
+            </div>
         </div>
     );
 };

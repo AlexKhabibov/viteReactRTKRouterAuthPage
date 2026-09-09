@@ -1,0 +1,48 @@
+.tabs {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+
+    border-bottom: 1px solid #e8e8e8;
+}
+
+.tab {
+    position: relative;
+
+    padding: 16px 0 12px;
+
+    border: 0;
+    background: transparent;
+
+    color: #777;
+
+    font-size: 13px;
+
+    cursor: pointer;
+}
+
+.tab:hover:not(:disabled) {
+    color: #6c2cff;
+}
+
+.tab.active {
+    color: #333;
+}
+
+.tab.active::after {
+    content: "";
+
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -1px;
+
+    height: 2px;
+
+    background: #6c2cff;
+}
+
+.tab:disabled {
+    color: #aaa;
+    cursor: default;
+}
