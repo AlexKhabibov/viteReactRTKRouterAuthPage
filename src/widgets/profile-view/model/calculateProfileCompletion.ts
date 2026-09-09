@@ -6,6 +6,7 @@ export const calculateProfileCompletion = (
     state: RootState
 ) => {
     const professionalProfile = profile.profiles[0];
+    const socialNetworks = state.profile.socialNetworks;
 
     const fields = [
         profile.username,
@@ -15,10 +16,18 @@ export const calculateProfileCompletion = (
         profile.country,
         profile.city,
         profile.birthday,
+        profile.address,
         professionalProfile?.specializationId,
         state.profile.specialistLevel,
         professionalProfile?.description,
         professionalProfile?.profileSkills?.length,
+        socialNetworks.vk,
+        socialNetworks.instagram,
+        socialNetworks.facebook,
+        socialNetworks.linkedin,
+        socialNetworks.telegram,
+        socialNetworks.github,
+        socialNetworks.whatsapp,
     ];
 
     const completedFields = fields.filter(Boolean).length;

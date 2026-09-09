@@ -35,11 +35,27 @@ export const ProfileView = ({ profile }: ProfileViewProps) => {
     return (
         <div>
             <h1>Мой профиль</h1>
+            <div>
+                {profile.avatarUrl ? (
+                    <img
+                        src={profile.avatarUrl}
+                        alt={profile.username}
+                        style={{
+                            width: 120,
+                            height: 120,
+                            borderRadius: "50%",
+                            objectFit: "cover",
+                        }}
+                    />
+                ) : (
+                    <div>Фото не загружено</div>
+                )}
 
-            <ProfileCompletion
-                percentage={completion}
-                onEdit={handleEdit}
-            />
+                <ProfileCompletion
+                    percentage={completion}
+                    onEdit={handleEdit}
+                />
+            </div>
 
             <ViewPersonalInfo
                 profile={profile}
