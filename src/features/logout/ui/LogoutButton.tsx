@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useLogoutMutation } from "../api/logoutApi";
 import { removeAccessToken } from "@/shared/api/lib";
+import styles from "./LogoutButton.module.css";
 
 interface LogoutButtonProps {
     isCollapsed: boolean;
@@ -31,12 +32,13 @@ export function LogoutButton({
             type="button"
             onClick={handleLogout}
             disabled={isLoading}
+            className={styles.button}
         >
-            <span>🚪</span>
+            <span className={styles.icon}>⇥</span>
 
             {!isCollapsed && (
-                <span>
-                    {isLoading ? "Выход..." : "Выйти"}
+                <span className={styles.label}>
+                    {isLoading ? "Выход..." : "Выход"}
                 </span>
             )}
         </button>

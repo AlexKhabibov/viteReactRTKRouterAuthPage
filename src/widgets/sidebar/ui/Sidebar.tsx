@@ -7,13 +7,45 @@ interface SidebarProps {
 }
 
 const navigationItems = [
-    { label: "Главная", icon: "🏠", path: "/dashboard" },
-    { label: "Мой профиль", icon: "👤", path: "/dashboard/profile" },
-    { label: "Обучение", icon: "📚", path: "/education" },
-    { label: "Блог", icon: "📝", path: "/blog" },
-    { label: "Менторы", icon: "👥", path: "/mentors" },
-    { label: "База знаний", icon: "📖", path: "/knowledge-base" },
-    { label: "Аналитика", icon: "📊", path: "/analytics" },
+    {
+        label: "Главная",
+        icon: "⌂",
+        path: "/dashboard",
+    },
+    {
+        label: "Мой профиль",
+        icon: "◉",
+        path: "/dashboard/profile",
+    },
+    {
+        label: "Обучение",
+        icon: "▣",
+        path: "/education",
+        hasArrow: true,
+    },
+    {
+        label: "Блог",
+        icon: "▤",
+        path: "/blog",
+        hasArrow: true,
+    },
+    {
+        label: "Менторы",
+        icon: "♙",
+        path: "/mentors",
+        hasArrow: true,
+    },
+    {
+        label: "База знаний",
+        icon: "▥",
+        path: "/knowledge-base",
+        hasArrow: true,
+    },
+    {
+        label: "Аналитика",
+        icon: "◔",
+        path: "/analytics",
+    },
 ];
 
 export function Sidebar({ isCollapsed }: SidebarProps) {
@@ -38,7 +70,15 @@ export function Sidebar({ isCollapsed }: SidebarProps) {
                                 </span>
 
                                 {!isCollapsed && (
-                                    <span>{item.label}</span>
+                                    <span className={styles.label}>
+                                        {item.label}
+                                    </span>
+                                )}
+
+                                {!isCollapsed && item.hasArrow && (
+                                    <span className={styles.arrow}>
+                                        ⌄
+                                    </span>
                                 )}
                             </NavLink>
                         </li>
@@ -51,9 +91,13 @@ export function Sidebar({ isCollapsed }: SidebarProps) {
                     type="button"
                     className={styles.actionButton}
                 >
-                    <span className={styles.icon}>💬</span>
+                    <span className={styles.icon}>?</span>
 
-                    {!isCollapsed && "Поддержка"}
+                    {!isCollapsed && (
+                        <span className={styles.label}>
+                            Поддержка
+                        </span>
+                    )}
                 </button>
 
                 <div className={styles.logout}>

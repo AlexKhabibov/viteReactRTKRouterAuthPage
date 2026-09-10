@@ -1,0 +1,52 @@
+.button {
+    width: 100%;
+    height: 40px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+
+    box-sizing: border-box;
+
+    border: 1px solid #ff3b5c;
+    border-radius: 8px;
+
+    background: #ffffff;
+    color: #ff3b5c;
+
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 400;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.15s ease,
+        color 0.15s ease;
+}
+
+.button:hover:not(:disabled) {
+    background: #fff1f4;
+}
+
+.button:disabled {
+    opacity: 0.6;
+    cursor: default;
+}
+
+.icon {
+    width: 20px;
+    height: 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 18px;
+    line-height: 1;
+}
+
+.label {
+    white-space: nowrap;
+}

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -46,10 +46,16 @@ interface PersonalInfoForm {
     };
 }
 
+const MAX_FILE_SIZE = 5 * 1024 * 1024;
+
 export const EditPersonalInfoForm = ({
     profile,
 }: EditPersonalInfoFormProps) => {
-    const [selectedFile, setSelectedFile] = useState<File | null>(null);
+    const [selectedFile, setSelectedFile] = useState<File | null>(
+        null
+    );
+
+    const fileInputRef = useRef<HTMLInputElement>(null);
 
     const previewUrl = useMemo(() => {
         if (selectedFile) {
@@ -87,9 +93,8 @@ export const EditPersonalInfoForm = ({
         (state: RootState) => state.profile.socialNetworks
     );
 
-    const {
-        data: specializations,
-    } = useGetSpecializationsQuery();
+    const { data: specializations } =
+        useGetSpecializationsQuery();
 
     const currentSpecializationId =
         profile.profiles[0]?.specializationId;
@@ -124,7 +129,23 @@ export const EditPersonalInfoForm = ({
             return;
         }
 
+        if (file.size > MAX_FILE_SIZE) {
+            return;
+        }
+
         setSelectedFile(file);
+    };
+
+    const handleFileChange = (
+        event: React.ChangeEvent<HTMLInputElement>
+    ) => {
+        const file = event.target.files?.[0];
+
+        if (file) {
+            handleFileSelect(file);
+        }
+
+        event.target.value = "";
     };
 
     const handleDrop = (
@@ -143,6 +164,10 @@ export const EditPersonalInfoForm = ({
         event: React.DragEvent<HTMLDivElement>
     ) => {
         event.preventDefault();
+    };
+
+    const handleUploadClick = () => {
+        fileInputRef.current?.click();
     };
 
     const handleDeleteAvatar = async () => {
@@ -227,6 +252,8 @@ export const EditPersonalInfoForm = ({
                     ),
             },
         }).unwrap();
+
+        setSelectedFile(null);
     };
 
     const socialNetworkFields = Object.keys(
@@ -283,9 +310,20 @@ export const EditPersonalInfoForm = ({
 
                         <div
                             className={styles.dropzone}
+                            onClick={handleUploadClick}
                             onDrop={handleDrop}
                             onDragOver={handleDragOver}
+                            role="button"
+                            tabIndex={0}
                         >
+                            <input
+                                ref={fileInputRef}
+                                type="file"
+                                accept="image/jpeg,image/png,image/jpg"
+                                onChange={handleFileChange}
+                                hidden
+                            />
+
                             <span
                                 className={
                                     styles.uploadIcon
@@ -311,9 +349,7 @@ export const EditPersonalInfoForm = ({
 
             <section className={styles.section}>
                 <div className={styles.sectionInfo}>
-                    <h2>
-                        Персональная информация
-                    </h2>
+                    <h2>Персональная информация</h2>
 
                     <p>
                         Поделитесь своими профилями
@@ -325,39 +361,26 @@ export const EditPersonalInfoForm = ({
                 <div className={styles.fields}>
                     <div className={styles.field}>
                         <label>Никнейм *</label>
-
-                        <input
-                            {...register("username")}
-                        />
+                        <input {...register("username")} />
                     </div>
 
                     <div className={styles.field}>
                         <label>Номер для связи</label>
-
-                        <input
-                            {...register("phone")}
-                        />
+                        <input {...register("phone")} />
                     </div>
 
                     <div className={styles.field}>
-                        <label>
-                            IT специальность *
-                        </label>
+                        <label>IT специальность *</label>
 
                         <select
-                            {...register(
-                                "specializationId",
-                                {
-                                    valueAsNumber: true,
-                                }
-                            )}
+                            {...register("specializationId", {
+                                valueAsNumber: true,
+                            })}
                         >
                             {specializations?.data.map(
                                 (specialization) => (
                                     <option
-                                        key={
-                                            specialization.id
-                                        }
+                                        key={specialization.id}
                                         value={
                                             specialization.id
                                         }
@@ -372,9 +395,7 @@ export const EditPersonalInfoForm = ({
 
                         <button
                             type="button"
-                            className={
-                                styles.linkButton
-                            }
+                            className={styles.linkButton}
                         >
                             Сменить специальность
                         </button>
@@ -382,18 +403,12 @@ export const EditPersonalInfoForm = ({
 
                     <div className={styles.field}>
                         <label>Локация</label>
-
-                        <input
-                            {...register("city")}
-                        />
+                        <input {...register("city")} />
                     </div>
 
                     <div className={styles.field}>
                         <label>Email для связи</label>
-
-                        <input
-                            {...register("email")}
-                        />
+                        <input {...register("email")} />
                     </div>
 
                     <div className={styles.field}>
@@ -446,7 +461,9 @@ export const EditPersonalInfoForm = ({
                             <label>{network}</label>
 
                             <input
-                                {...register(`socialNetworks.${network}`)}
+                                {...register(
+                                    `socialNetworks.${network}`
+                                )}
                                 placeholder="Ссылка"
                             />
                         </div>
