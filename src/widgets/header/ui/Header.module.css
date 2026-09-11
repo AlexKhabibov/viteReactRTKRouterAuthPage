@@ -1,23 +1,64 @@
 .header {
+    width: 100%;
+    height: 62px;
+
+    box-sizing: border-box;
+
     display: flex;
     align-items: center;
     justify-content: space-between;
 
-    padding: 12px 24px;
+    padding: 0 16px;
 
-    border-bottom: 1px solid #e5e5e5;
+    background: #ffffff;
+    border-bottom: 1px solid #eeeeee;
 }
 
 .left,
 .right {
     display: flex;
     align-items: center;
-    gap: 16px;
+}
+
+.left {
+    gap: 24px;
+}
+
+.right {
+    gap: 18px;
 }
 
 .logo {
-    font-size: 20px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+
+    white-space: nowrap;
+}
+
+.logoIcon {
+    width: 28px;
+    height: 28px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #6412ff;
+    color: #ffffff;
+
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.logoText {
+    color: #292929;
+
+    font-size: 21px;
     font-weight: 700;
+    line-height: 1;
 }
 
 .toggleButton,
@@ -27,30 +68,107 @@
     align-items: center;
     justify-content: center;
 
-    padding: 8px;
+    padding: 0;
 
     border: 0;
     background: transparent;
+
+    color: #555555;
 
     cursor: pointer;
 }
 
 .toggleButton {
-    font-size: 20px;
+    width: 24px;
+    height: 24px;
+
+    font-size: 19px;
+    line-height: 1;
+}
+
+.toggleButton:hover,
+.settingsButton:hover {
+    color: #6412ff;
 }
 
 .settingsButton {
-    font-size: 20px;
+    width: 24px;
+    height: 24px;
+
+    font-size: 19px;
 }
 
 .profileButton {
-    padding: 0;
+    width: 34px;
+    height: 34px;
+
+    overflow: hidden;
+
+    border-radius: 8px;
 }
 
 .avatar {
-    width: 40px;
-    height: 40px;
+    width: 100%;
+    height: 100%;
 
-    border-radius: 50%;
+    display: block;
+
     object-fit: cover;
+}
+
+.avatarPlaceholder {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #f0f0f0;
+
+    color: #777777;
+
+    font-size: 16px;
+}
+
+@media (max-width: 768px) {
+    .header {
+        height: 56px;
+
+        padding: 0 12px;
+    }
+
+    .left {
+        gap: 14px;
+    }
+
+    .right {
+        gap: 10px;
+    }
+
+    .logoText {
+        font-size: 18px;
+    }
+
+    .logoIcon {
+        width: 26px;
+        height: 26px;
+
+        font-size: 13px;
+    }
+
+    .settingsButton {
+        display: none;
+    }
+
+    .profileButton {
+        width: 32px;
+        height: 32px;
+    }
+}
+
+@media (max-width: 480px) {
+    .logoText {
+        display: none;
+    }
 }

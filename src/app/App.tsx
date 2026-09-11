@@ -1,11 +1,11 @@
 import { RouterProvider } from "react-router-dom";
-import { router } from "./router/routerConfig";
-import { StoreProvider } from "./providers/StoreProvider/StoreProvider";
+import { routerConfig, StoreProvider } from "./providers";
+
 
 function App() {
   return (
     <StoreProvider>
-      <RouterProvider router={router} />
+      <RouterProvider router={routerConfig} />
     </StoreProvider>
   );
 }

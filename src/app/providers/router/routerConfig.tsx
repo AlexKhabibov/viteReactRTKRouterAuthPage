@@ -5,10 +5,10 @@ import { SignupPage } from "@/pages/auth/signup";
 import { ForgotPasswordPage } from "@/pages/auth/forgot-password";
 import { ResetPasswordPage } from "@/pages/auth/reset-password";
 import { ProfileEditPage, ProfileViewPage } from "@/pages/profile";
+import { DashboardLayout } from "../../layouts/dashboard/DashboardLayout";
 import { ProtectedRoute } from "./ProtectedRoute";
-import { DashboardLayout } from "../layouts/dashboard/DashboardLayout";
 
-export const router = createBrowserRouter([
+export const routerConfig = createBrowserRouter([
     {
         path: "/auth",
         children: [

@@ -2,6 +2,15 @@ import { NavLink } from "react-router-dom";
 import { LogoutButton } from "@/features/logout";
 import styles from "./Sidebar.module.css";
 
+import MaimMenuIcon from "@/shared/ui/assets/icons/home.svg";
+import UserMenuIcon from "@/shared/ui/assets/icons/user.svg";
+import EducationMenuIcon from "@/shared/ui/assets/icons/book.svg";
+import BlogMenuIcon from "@/shared/ui/assets/icons/bookOpen.svg";
+import MentorsMenuIcon from "@/shared/ui/assets/icons/messageSend.svg";
+import BaseMenuIcon from "@/shared/ui/assets/icons/listTasks.svg";
+import AnaliticsMenuIcon from "@/shared/ui/assets/icons/pieChart.svg";
+
+
 interface SidebarProps {
     isCollapsed: boolean;
 }
@@ -9,41 +18,41 @@ interface SidebarProps {
 const navigationItems = [
     {
         label: "Главная",
-        icon: "⌂",
+        icon: MaimMenuIcon,
         path: "/dashboard",
     },
     {
         label: "Мой профиль",
-        icon: "◉",
+        icon: UserMenuIcon,
         path: "/dashboard/profile",
     },
     {
         label: "Обучение",
-        icon: "▣",
+        icon: EducationMenuIcon,
         path: "/education",
         hasArrow: true,
     },
     {
         label: "Блог",
-        icon: "▤",
+        icon: BlogMenuIcon,
         path: "/blog",
         hasArrow: true,
     },
     {
         label: "Менторы",
-        icon: "♙",
+        icon: MentorsMenuIcon,
         path: "/mentors",
         hasArrow: true,
     },
     {
         label: "База знаний",
-        icon: "▥",
+        icon: BaseMenuIcon,
         path: "/knowledge-base",
         hasArrow: true,
     },
     {
         label: "Аналитика",
-        icon: "◔",
+        icon: AnaliticsMenuIcon,
         path: "/analytics",
     },
 ];
@@ -66,7 +75,10 @@ export function Sidebar({ isCollapsed }: SidebarProps) {
                                 }
                             >
                                 <span className={styles.icon}>
-                                    {item.icon}
+                                    <img
+                                        src={item.icon}
+                                        alt=""
+                                    />
                                 </span>
 
                                 {!isCollapsed && (
@@ -101,7 +113,9 @@ export function Sidebar({ isCollapsed }: SidebarProps) {
                 </button>
 
                 <div className={styles.logout}>
-                    <LogoutButton isCollapsed={isCollapsed} />
+                    <LogoutButton
+                        isCollapsed={isCollapsed}
+                    />
                 </div>
             </div>
         </aside>

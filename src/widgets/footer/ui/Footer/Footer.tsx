@@ -32,24 +32,21 @@ export function Footer() {
                 <div className={styles.footerCopyrightContainer}>
                     <div className={styles.footerCopyright}>
                         <div className={styles.copyright}>
-                            <p>© {currentYear} YeaHub</p>
-                            <p>Документы</p>
+                            <span>© {currentYear} YeaHub</span>
+                            <span>Документы</span>
+                        </div>
+
+                        <div className={styles.social}>
+                            <span>
+                                Ищите нас и в других соцсетях @yeahub_it
+                            </span>
 
                             <img
                                 src={SocialIcons}
                                 alt="Социальные сети"
                             />
                         </div>
-
-                        <div className={styles.social}>
-                            Ищите нас и в других соцсетях @yeahub_it
-                        </div>
                     </div>
-
-                    <img
-                        src={SocialIcons}
-                        alt="Социальные сети"
-                    />
                 </div>
             </div>
         </footer>
