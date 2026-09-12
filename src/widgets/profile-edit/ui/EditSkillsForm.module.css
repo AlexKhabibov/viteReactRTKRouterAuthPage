@@ -5,6 +5,7 @@
 .content {
     display: grid;
     grid-template-columns: 250px minmax(0, 1fr);
+
     gap: 48px;
 }
 
@@ -16,6 +17,7 @@
     margin: 0 0 6px;
 
     color: #333;
+
     font-size: 15px;
     line-height: 1.3;
     font-weight: 500;
@@ -25,6 +27,7 @@
     margin: 0;
 
     color: #777;
+
     font-size: 13px;
     line-height: 1.35;
 }
@@ -43,11 +46,13 @@
     margin-bottom: 7px;
 
     color: #666;
+
     font-size: 12px;
 }
 
 .selectWrapper {
     position: relative;
+
     width: 100%;
 }
 
@@ -87,12 +92,14 @@
 
 .chevron {
     position: absolute;
+
     top: 50%;
     right: 14px;
 
     transform: translateY(-50%);
 
     color: #888;
+
     font-size: 16px;
 
     pointer-events: none;
@@ -108,12 +115,14 @@
     margin-bottom: 10px;
 
     color: #444;
+
     font-size: 13px;
 }
 
 .selected {
     display: flex;
     flex-wrap: wrap;
+
     gap: 6px;
 
     min-height: 42px;
@@ -122,11 +131,13 @@
 .skill {
     display: inline-flex;
     align-items: center;
+
     gap: 7px;
 
     min-height: 34px;
 
     box-sizing: border-box;
+
     padding: 0 8px 0 9px;
 
     border: 1px solid #6412ff;
@@ -135,6 +146,7 @@
     background: #fff;
 
     color: #333;
+
     font-size: 13px;
 }
 
@@ -220,6 +232,7 @@
 
 .saveButton:disabled {
     opacity: 0.6;
+
     cursor: default;
 }
 
@@ -227,5 +240,59 @@
     padding: 30px 0;
 
     color: #777;
+
     font-size: 14px;
+}
+
+@media (max-width: 900px) {
+    .content {
+        grid-template-columns: 180px minmax(0, 1fr);
+
+        gap: 24px;
+    }
+}
+
+@media (max-width: 768px) {
+    .form {
+        padding: 24px 0;
+    }
+
+    .content {
+        grid-template-columns: 1fr;
+
+        gap: 20px;
+    }
+
+    .info {
+        padding-top: 0;
+    }
+
+    .saveRow {
+        justify-content: stretch;
+    }
+
+    .saveButton {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .form {
+        padding: 20px 0;
+    }
+
+    .selected {
+        gap: 6px;
+    }
+
+    .skill {
+        max-width: 100%;
+
+        padding-left: 8px;
+    }
+
+    .skillName {
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
 }

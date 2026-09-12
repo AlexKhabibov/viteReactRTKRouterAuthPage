@@ -1,18 +1,22 @@
 .layout {
     min-height: 100vh;
+
     display: flex;
     flex-direction: column;
 }
 
 .content {
     position: relative;
+
     display: flex;
     flex: 1 0 auto;
+
     min-width: 0;
 }
 
 .sidebarWrapper {
     flex-shrink: 0;
+
     display: flex;
 }
 
@@ -61,10 +65,16 @@
 
         z-index: 90;
 
+        width: 100%;
+        height: auto;
+
         padding: 0;
+
         border: 0;
 
         background: rgba(0, 0, 0, 0.25);
+
+        cursor: pointer;
     }
 
     .main {

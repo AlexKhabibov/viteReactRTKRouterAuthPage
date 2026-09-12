@@ -1,10 +1,12 @@
 .card {
     display: flex;
+
     gap: 16px;
 
     padding: 16px;
 
     background: #fff;
+
     border-radius: 16px;
 
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
@@ -13,6 +15,7 @@
 .avatarWrapper {
     width: 150px;
     height: 160px;
+
     flex-shrink: 0;
 
     overflow: hidden;
@@ -40,10 +43,13 @@
     background: #f0f0f0;
 
     color: #999;
+
     font-size: 13px;
 }
 
 .content {
+    min-width: 0;
+
     display: flex;
     flex-direction: column;
 
@@ -53,19 +59,29 @@
 .nameRow {
     display: flex;
     align-items: center;
+
     gap: 10px;
+
+    min-width: 0;
 }
 
 .name {
+    min-width: 0;
+
     margin: 0;
 
     font-size: 24px;
     line-height: 1.2;
     font-weight: 500;
+
     color: #222;
+
+    overflow-wrap: anywhere;
 }
 
 .status {
+    flex-shrink: 0;
+
     padding: 4px 8px;
 
     border-radius: 8px;
@@ -80,34 +96,44 @@
     margin-top: 8px;
 
     font-size: 16px;
+
     color: #333;
+
+    overflow-wrap: anywhere;
 }
 
 .details {
     display: flex;
     flex-direction: column;
+
     gap: 4px;
 
     margin-top: 8px;
 
     color: #888;
+
     font-size: 14px;
 }
 
 .contacts {
     display: flex;
     flex-direction: column;
+
     gap: 3px;
 
     margin-top: 14px;
 
     color: #555;
+
     font-size: 14px;
+
+    overflow-wrap: anywhere;
 }
 
 .socials {
     display: flex;
     flex-wrap: wrap;
+
     gap: 6px;
 
     margin-top: 12px;
@@ -127,6 +153,69 @@
     color: #fff;
 
     font-size: 9px;
+
     text-decoration: none;
     text-transform: uppercase;
+}
+
+@media (max-width: 768px) {
+    .card {
+        gap: 14px;
+
+        padding: 14px;
+    }
+
+    .avatarWrapper {
+        width: 120px;
+        height: 130px;
+    }
+
+    .name {
+        font-size: 21px;
+    }
+
+    .specialization {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 560px) {
+    .card {
+        flex-direction: column;
+    }
+
+    .avatarWrapper {
+        width: 112px;
+        height: 112px;
+
+        align-self: flex-start;
+
+        border-radius: 14px;
+    }
+
+    .content {
+        width: 100%;
+    }
+
+    .nameRow {
+        align-items: flex-start;
+        flex-wrap: wrap;
+    }
+
+    .name {
+        font-size: 20px;
+    }
+
+    .details,
+    .contacts {
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 480px) {
+    .card {
+        padding: 12px;
+
+        border-radius: 12px;
+    }
 }

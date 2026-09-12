@@ -13,6 +13,7 @@
     padding: 0 16px;
 
     background: #ffffff;
+
     border-bottom: 1px solid #eeeeee;
 }
 
@@ -113,10 +114,6 @@
 }
 
 @media (max-width: 1024px) {
-    .header {
-        padding: 0 16px;
-    }
-
     .left {
         gap: 18px;
     }
@@ -129,6 +126,7 @@
 @media (max-width: 768px) {
     .header {
         height: 56px;
+
         padding: 0 12px;
     }
 

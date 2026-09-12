@@ -5,6 +5,7 @@
 .section {
     display: grid;
     grid-template-columns: 220px minmax(0, 1fr);
+
     gap: 36px;
 
     padding: 28px 0;
@@ -17,6 +18,7 @@
 
     font-size: 15px;
     font-weight: 500;
+
     color: #333;
 }
 
@@ -25,6 +27,7 @@
 
     font-size: 11px;
     line-height: 1.35;
+
     color: #888;
 }
 
@@ -35,6 +38,7 @@
 .photoRow {
     display: flex;
     align-items: flex-start;
+
     gap: 18px;
 }
 
@@ -42,6 +46,8 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+
+    flex-shrink: 0;
 }
 
 .avatar,
@@ -62,6 +68,7 @@
     background: #f4f4f4;
 
     color: #999;
+
     font-size: 12px;
 }
 
@@ -74,12 +81,15 @@
     color: #ff3151;
 
     font-size: 11px;
+
     cursor: pointer;
 }
 
 .dropzone {
     flex: 1;
+
     min-height: 112px;
+    min-width: 0;
 
     display: flex;
     flex-direction: column;
@@ -101,11 +111,13 @@
 
 .dropzone strong {
     color: #6c2cff;
+
     font-weight: 400;
 }
 
 .dropzone small {
     margin-top: 8px;
+
     color: #aaa;
 }
 
@@ -113,29 +125,36 @@
     margin-bottom: 8px;
 
     color: #6c2cff;
+
     font-size: 22px;
 }
 
 .fields {
     display: grid;
     grid-template-columns: 1fr 1fr;
+
     gap: 14px;
 }
 
 .socialFields {
     display: grid;
     grid-template-columns: 1fr 1fr;
+
     gap: 14px;
 }
 
 .field {
     display: flex;
     flex-direction: column;
+
     gap: 6px;
+
+    min-width: 0;
 }
 
 .field label {
     font-size: 11px;
+
     color: #555;
 }
 
@@ -154,6 +173,7 @@
     background: #fff;
 
     color: #444;
+
     font-size: 12px;
 
     box-sizing: border-box;
@@ -175,6 +195,7 @@
     color: #6c2cff;
 
     font-size: 11px;
+
     cursor: pointer;
 }
 
@@ -197,4 +218,83 @@
     color: #fff;
 
     cursor: pointer;
+}
+
+@media (max-width: 900px) {
+    .section {
+        grid-template-columns: 180px minmax(0, 1fr);
+
+        gap: 24px;
+    }
+
+    .fields,
+    .socialFields {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .section {
+        grid-template-columns: 1fr;
+
+        gap: 20px;
+
+        padding: 24px 0;
+    }
+
+    .sectionInfo p {
+        margin-top: 5px;
+    }
+
+    .photoRow {
+        flex-direction: column;
+
+        gap: 16px;
+    }
+
+    .photoColumn {
+        align-items: flex-start;
+    }
+
+    .dropzone {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .submitRow {
+        justify-content: stretch;
+    }
+
+    .saveButton {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .form {
+        padding-top: 0;
+    }
+
+    .section {
+        padding: 20px 0;
+    }
+
+    .avatar,
+    .avatarPlaceholder {
+        width: 100px;
+        height: 100px;
+
+        border-radius: 14px;
+    }
+
+    .dropzone {
+        min-height: 100px;
+
+        padding: 16px;
+    }
+
+    .field input,
+    .field select {
+        height: 42px;
+    }
 }

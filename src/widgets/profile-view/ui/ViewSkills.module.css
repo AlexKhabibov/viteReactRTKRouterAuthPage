@@ -1,8 +1,10 @@
 .card {
     margin-top: 20px;
+
     padding: 24px;
 
     background: #fff;
+
     border-radius: 16px;
 
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
@@ -21,6 +23,7 @@
 
     font-size: 16px;
     font-weight: 500;
+
     color: #333;
 }
 
@@ -31,12 +34,14 @@
     color: #6c2cff;
 
     font-size: 14px;
+
     cursor: pointer;
 }
 
 .skills {
     display: flex;
     flex-wrap: wrap;
+
     gap: 8px;
 }
 
@@ -54,5 +59,34 @@
 
 .empty {
     color: #999;
+
     font-size: 14px;
+}
+
+@media (max-width: 768px) {
+    .card {
+        padding: 20px;
+    }
+
+    .skill {
+        padding: 7px 12px;
+
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 480px) {
+    .card {
+        margin-top: 16px;
+
+        padding: 16px;
+
+        border-radius: 12px;
+    }
+
+    .skill {
+        padding: 6px 10px;
+
+        font-size: 12px;
+    }
 }

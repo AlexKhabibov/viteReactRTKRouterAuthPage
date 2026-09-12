@@ -1,13 +1,24 @@
 .tabs {
     display: flex;
     align-items: center;
+
     gap: 24px;
 
+    overflow-x: auto;
+
     border-bottom: 1px solid #e8e8e8;
+
+    scrollbar-width: none;
+}
+
+.tabs::-webkit-scrollbar {
+    display: none;
 }
 
 .tab {
     position: relative;
+
+    flex-shrink: 0;
 
     padding: 16px 0 12px;
 
@@ -17,6 +28,8 @@
     color: #777;
 
     font-size: 13px;
+
+    white-space: nowrap;
 
     cursor: pointer;
 }
@@ -33,6 +46,7 @@
     content: "";
 
     position: absolute;
+
     left: 0;
     right: 0;
     bottom: -1px;
@@ -44,5 +58,29 @@
 
 .tab:disabled {
     color: #aaa;
+
     cursor: default;
+}
+
+@media (max-width: 768px) {
+    .tabs {
+        gap: 20px;
+    }
+
+    .tab {
+        padding-top: 14px;
+        padding-bottom: 11px;
+
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .tabs {
+        gap: 18px;
+    }
+
+    .tab {
+        font-size: 11px;
+    }
 }

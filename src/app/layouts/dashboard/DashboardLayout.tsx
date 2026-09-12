@@ -44,7 +44,11 @@ export function DashboardLayout() {
                         }`}
                 >
                     <Sidebar
-                        isCollapsed={isSidebarCollapsed}
+                        isCollapsed={
+                            isMobileMenuOpen
+                                ? false
+                                : isSidebarCollapsed
+                        }
                     />
                 </div>
 

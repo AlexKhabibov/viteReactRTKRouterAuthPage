@@ -1,12 +1,14 @@
 .card {
     display: flex;
     align-items: center;
+
     gap: 24px;
 
     margin-bottom: 20px;
     padding: 20px 24px;
 
     background: #fff;
+
     border-radius: 16px;
 
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
@@ -15,6 +17,7 @@
 .info {
     display: flex;
     flex-direction: column;
+
     min-width: 170px;
 }
 
@@ -29,16 +32,19 @@
     font-size: 24px;
     line-height: 1;
     font-weight: 500;
+
     color: #222;
 }
 
 .progress {
     flex: 1;
+
     height: 8px;
 
     overflow: hidden;
 
     background: #eee;
+
     border-radius: 10px;
 }
 
@@ -46,6 +52,7 @@
     height: 100%;
 
     background: #6c2cff;
+
     border-radius: inherit;
 
     transition: width 0.25s ease;
@@ -60,12 +67,49 @@
     border-radius: 8px;
 
     background: #6c2cff;
+
     color: #fff;
 
     font-size: 14px;
+
     cursor: pointer;
 }
 
 .button:hover {
     background: #5b20e6;
+}
+
+@media (max-width: 768px) {
+    .card {
+        flex-direction: column;
+        align-items: stretch;
+
+        gap: 14px;
+
+        padding: 18px;
+    }
+
+    .info {
+        min-width: 0;
+    }
+
+    .progress {
+        width: 100%;
+    }
+
+    .button {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .card {
+        padding: 16px;
+
+        border-radius: 12px;
+    }
+
+    .percentage {
+        font-size: 22px;
+    }
 }

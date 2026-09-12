@@ -1,7 +1,9 @@
 import { useGetProfileQuery } from "@/features/get-profile";
+
 import YeahubMainLogo from "@/shared/ui/assets/logoPrimaryBlock.png";
 import Settings from "@/shared/ui/assets/icons/gear.svg";
 import Menu from "@/shared/ui/assets/icons/arrowInSquare.svg";
+
 import styles from "./Header.module.css";
 
 interface HeaderProps {
@@ -12,7 +14,6 @@ interface HeaderProps {
 export function Header({
     onToggleSidebar,
 }: HeaderProps) {
-
     const { data } = useGetProfileQuery();
 
     return (
@@ -28,7 +29,7 @@ export function Header({
                     type="button"
                     className={styles.toggleButton}
                     onClick={onToggleSidebar}
-                    aria-label="Свернуть меню"
+                    aria-label="Открыть меню"
                 >
                     <img src={Menu} alt="" />
                 </button>
@@ -55,7 +56,11 @@ export function Header({
                             alt={data.username}
                         />
                     ) : (
-                        <span className={styles.avatarPlaceholder}>
+                        <span
+                            className={
+                                styles.avatarPlaceholder
+                            }
+                        >
                             👤
                         </span>
                     )}
