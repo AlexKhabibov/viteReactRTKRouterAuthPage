@@ -1,15 +1,17 @@
 import { NavLink } from "react-router-dom";
-import { LogoutButton } from "@/features/logout";
-import styles from "./Sidebar.module.css";
 
-import MaimMenuIcon from "@/shared/ui/assets/icons/home.svg";
+import { LogoutButton } from "@/features/logout";
+
+import MainMenuIcon from "@/shared/ui/assets/icons/home.svg";
 import UserMenuIcon from "@/shared/ui/assets/icons/user.svg";
 import EducationMenuIcon from "@/shared/ui/assets/icons/book.svg";
 import BlogMenuIcon from "@/shared/ui/assets/icons/bookOpen.svg";
 import MentorsMenuIcon from "@/shared/ui/assets/icons/messageSend.svg";
 import BaseMenuIcon from "@/shared/ui/assets/icons/listTasks.svg";
-import AnaliticsMenuIcon from "@/shared/ui/assets/icons/pieChart.svg";
+import AnalyticsMenuIcon from "@/shared/ui/assets/icons/pieChart.svg";
+import SupportIcon from "@/shared/ui/assets/icons/message.svg";
 
+import styles from "./Sidebar.module.css";
 
 interface SidebarProps {
     isCollapsed: boolean;
@@ -18,7 +20,7 @@ interface SidebarProps {
 const navigationItems = [
     {
         label: "Главная",
-        icon: MaimMenuIcon,
+        icon: MainMenuIcon,
         path: "/dashboard",
     },
     {
@@ -52,7 +54,7 @@ const navigationItems = [
     },
     {
         label: "Аналитика",
-        icon: AnaliticsMenuIcon,
+        icon: AnalyticsMenuIcon,
         path: "/analytics",
     },
 ];
@@ -60,8 +62,9 @@ const navigationItems = [
 export function Sidebar({ isCollapsed }: SidebarProps) {
     return (
         <aside
-            className={`${styles.sidebar} ${isCollapsed ? styles.sidebarCollapsed : ""
-                }`}
+            className={`${styles.sidebar} ${
+                isCollapsed ? styles.sidebarCollapsed : ""
+            }`}
         >
             <nav className={styles.navigation}>
                 <ul className={styles.navigationList}>
@@ -70,15 +73,13 @@ export function Sidebar({ isCollapsed }: SidebarProps) {
                             <NavLink
                                 to={item.path}
                                 className={({ isActive }) =>
-                                    `${styles.link} ${isActive ? styles.active : ""
+                                    `${styles.link} ${
+                                        isActive ? styles.active : ""
                                     }`
                                 }
                             >
                                 <span className={styles.icon}>
-                                    <img
-                                        src={item.icon}
-                                        alt=""
-                                    />
+                                    <img src={item.icon} alt="" />
                                 </span>
 
                                 {!isCollapsed && (
@@ -103,7 +104,9 @@ export function Sidebar({ isCollapsed }: SidebarProps) {
                     type="button"
                     className={styles.actionButton}
                 >
-                    <span className={styles.icon}>?</span>
+                    <span className={styles.icon}>
+                        <img src={SupportIcon} alt="" />
+                    </span>
 
                     {!isCollapsed && (
                         <span className={styles.label}>

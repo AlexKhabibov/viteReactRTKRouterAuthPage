@@ -12,6 +12,7 @@ interface HeaderProps {
 export function Header({
     onToggleSidebar,
 }: HeaderProps) {
+
     const { data } = useGetProfileQuery();
 
     return (
