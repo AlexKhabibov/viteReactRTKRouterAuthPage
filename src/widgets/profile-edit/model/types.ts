@@ -19,3 +19,4 @@ export interface ProfileFormData {
     experience: [];
     education: [];
 }
+

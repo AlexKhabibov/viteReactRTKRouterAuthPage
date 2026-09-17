@@ -1,38 +1,55 @@
 import { useState } from "react";
-
 import type { Profile } from "@/features/get-profile/api/profileApi";
+import type { ProfileChanges } from "@/features/update-profile/api/profileApi";
 import { useGetSkillsQuery } from "@/features/get-skills";
-import { useUpdateProfileMutation } from "@/features/update-profile";
-
 import styles from "./EditSkillsForm.module.css";
 
 interface EditSkillsFormProps {
     profile: Profile;
+    onSubmit: (
+        changes: ProfileChanges
+    ) => Promise<void>;
+    onSuccess: () => void;
+    isSaving: boolean;
 }
 
 export const EditSkillsForm = ({
     profile,
+    onSubmit,
+    onSuccess,
+    isSaving,
 }: EditSkillsFormProps) => {
-    const { data: skills, isLoading } = useGetSkillsQuery();
+    const professionalProfile =
+        profile.profiles[0];
 
-    const [updateProfile, { isLoading: isSaving }] =
-        useUpdateProfileMutation();
+    const {
+        data: skills,
+        isLoading,
+    } = useGetSkillsQuery();
 
-    const professionalProfile = profile.profiles[0];
-
-    const [selectedSkills, setSelectedSkills] = useState<string[]>(
+    const [
+        selectedSkills,
+        setSelectedSkills,
+    ] = useState<string[]>(
         professionalProfile?.profileSkills.map(
             (skill) => String(skill.id)
         ) ?? []
     );
 
-    if (!professionalProfile) {
-        return (
-            <div className={styles.message}>
-                Профессиональный профиль не найден
-            </div>
-        );
-    }
+    const handleSave = async () => {
+        try {
+            await onSubmit({
+                profileSkills: selectedSkills,
+            });
+
+            onSuccess();
+        } catch (error) {
+            console.error(
+                "Ошибка сохранения навыков:",
+                error
+            );
+        }
+    };
 
     if (isLoading) {
         return (
@@ -42,125 +59,131 @@ export const EditSkillsForm = ({
         );
     }
 
-    const handleAddSkill = (
-        event: React.ChangeEvent<HTMLSelectElement>
-    ) => {
-        const skillId = event.target.value;
-
-        if (!skillId) {
-            return;
-        }
-
-        setSelectedSkills((prev) => {
-            if (prev.includes(skillId)) {
-                return prev;
-            }
-
-            return [...prev, skillId];
-        });
-
-        event.target.value = "";
-    };
-
-    const handleRemoveSkill = (skillId: string) => {
-        setSelectedSkills((prev) =>
-            prev.filter((id) => id !== skillId)
-        );
-    };
-
-    const handleSave = async () => {
-        await updateProfile({
-            id: professionalProfile.id,
-            data: {
-                userId: profile.id,
-                specializationId:
-                    professionalProfile.specializationId,
-                markingWeight:
-                    professionalProfile.markingWeight,
-                description:
-                    professionalProfile.description,
-                socialNetwork: [],
-                image_src:
-                    professionalProfile.image_src,
-                profileSkills: selectedSkills,
-            },
-        }).unwrap();
-    };
-
-    const selectedSkillObjects = selectedSkills
-        .map((skillId) =>
-            skills?.data.find(
-                (skill) => String(skill.id) === skillId
-            )
-        )
-        .filter(Boolean);
-
-    const availableSkills = skills?.data.filter(
-        (skill) =>
-            !selectedSkills.includes(String(skill.id))
-    );
-
     return (
         <div className={styles.form}>
             <div className={styles.content}>
                 <div className={styles.info}>
                     <h2 className={styles.title}>
-                        Твои навыки
+                        Навыки
                     </h2>
 
-                    <p className={styles.description}>
-                        Покажи что ты умеешь
-                        <br />
-                        и в чём ты действительно хорошо
+                    <p
+                        className={
+                            styles.description
+                        }
+                    >
+                        Выберите навыки, которыми
+                        вы владеете
                     </p>
                 </div>
 
                 <div className={styles.fields}>
                     <div className={styles.field}>
                         <label
-                            className={styles.label}
-                            htmlFor="skill"
+                            className={
+                                styles.label
+                            }
                         >
-                            Навык
+                            Добавить навык
                         </label>
 
-                        <div className={styles.selectWrapper}>
+                        <div
+                            className={
+                                styles.selectWrapper
+                            }
+                        >
                             <select
-                                id="skill"
-                                className={styles.select}
-                                defaultValue=""
-                                onChange={handleAddSkill}
+                                className={
+                                    styles.select
+                                }
+                                value=""
+                                onChange={(
+                                    event
+                                ) => {
+                                    const skillId =
+                                        event.target
+                                            .value;
+
+                                    if (
+                                        !skillId ||
+                                        selectedSkills.includes(
+                                            skillId
+                                        )
+                                    ) {
+                                        return;
+                                    }
+
+                                    setSelectedSkills(
+                                        (prev) => [
+                                            ...prev,
+                                            skillId,
+                                        ]
+                                    );
+                                }}
                             >
-                                <option value="" disabled>
-                                    Выбери навык из списка
+                                <option value="">
+                                    Выберите навык
                                 </option>
 
-                                {availableSkills?.map(
+                                {skills?.data?.map(
                                     (skill) => (
                                         <option
-                                            key={skill.id}
-                                            value={skill.id}
+                                            key={
+                                                skill.id
+                                            }
+                                            value={String(
+                                                skill.id
+                                            )}
                                         >
-                                            {skill.title}
+                                            {
+                                                skill.title
+                                            }
                                         </option>
                                     )
                                 )}
                             </select>
 
-                            <span className={styles.chevron}>
-                                ⌄
+                            <span
+                                className={
+                                    styles.chevron
+                                }
+                            >
+                                ▾
                             </span>
                         </div>
                     </div>
 
-                    <div className={styles.selectedBlock}>
-                        <span className={styles.selectedTitle}>
+                    <div
+                        className={
+                            styles.selectedBlock
+                        }
+                    >
+                        <span
+                            className={
+                                styles.selectedTitle
+                            }
+                        >
                             Выбранные навыки
                         </span>
 
-                        <div className={styles.selected}>
-                            {selectedSkillObjects.map(
-                                (skill) => {
+                        <div
+                            className={
+                                styles.selected
+                            }
+                        >
+                            {selectedSkills.map(
+                                (skillId) => {
+                                    const skill =
+                                        skills?.data?.find(
+                                            (
+                                                item
+                                            ) =>
+                                                String(
+                                                    item.id
+                                                ) ===
+                                                skillId
+                                        );
+
                                     if (!skill) {
                                         return null;
                                     }
@@ -170,14 +193,16 @@ export const EditSkillsForm = ({
                                             className={
                                                 styles.skill
                                             }
-                                            key={skill.id}
+                                            key={
+                                                skillId
+                                            }
                                         >
                                             <span
                                                 className={
                                                     styles.skillIcon
                                                 }
                                             >
-                                                ◆
+                                                ✓
                                             </span>
 
                                             <span
@@ -185,22 +210,30 @@ export const EditSkillsForm = ({
                                                     styles.skillName
                                                 }
                                             >
-                                                {skill.title}
+                                                {
+                                                    skill.title
+                                                }
                                             </span>
 
                                             <button
-                                                type="button"
                                                 className={
                                                     styles.removeButton
                                                 }
+                                                type="button"
                                                 onClick={() =>
-                                                    handleRemoveSkill(
-                                                        String(
-                                                            skill.id
-                                                        )
+                                                    setSelectedSkills(
+                                                        (
+                                                            prev
+                                                        ) =>
+                                                            prev.filter(
+                                                                (
+                                                                    id
+                                                                ) =>
+                                                                    id !==
+                                                                    skillId
+                                                            )
                                                     )
                                                 }
-                                                aria-label={`Удалить ${skill.title}`}
                                             >
                                                 ×
                                             </button>
@@ -215,14 +248,20 @@ export const EditSkillsForm = ({
 
             <div className={styles.saveRow}>
                 <button
+                    className={
+                        styles.saveButton
+                    }
                     type="button"
-                    className={styles.saveButton}
                     onClick={handleSave}
                     disabled={isSaving}
                 >
                     {isSaving
                         ? "Сохранение..."
-                        : "Сохранить"}
+                        : "Далее"}
+
+                    {!isSaving && (
+                        <span>→</span>
+                    )}
                 </button>
             </div>
         </div>

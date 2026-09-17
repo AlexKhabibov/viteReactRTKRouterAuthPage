@@ -1,19 +1,30 @@
 import { baseApi } from "@/shared/api/baseApi";
 
-interface SocialNetwork {
+export interface SocialNetwork {
     code: string;
     title: string;
 }
 
-interface UpdateProfileRequest {
+export interface UpdateProfileRequest {
     userId: string;
     specializationId: number;
     markingWeight: number;
     description: string;
-    socialNetwork: SocialNetwork[];
     image_src: string;
     profileSkills: string[];
+    socialNetwork: SocialNetwork[];
 }
+
+export type ProfileChanges = Partial<
+    Pick<
+        UpdateProfileRequest,
+        | "specializationId"
+        | "markingWeight"
+        | "description"
+        | "image_src"
+        | "profileSkills"
+    >
+>;
 
 export const updateProfileApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({

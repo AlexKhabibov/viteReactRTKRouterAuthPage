@@ -1,29 +1,26 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import {
+    useEffect,
+    useMemo,
+    useRef,
+    useState,
+} from "react";
 import { useForm } from "react-hook-form";
-import { useDispatch, useSelector } from "react-redux";
-
+import {
+    useSelector,
+    useDispatch,
+} from "react-redux";
 import type { Profile } from "@/features/get-profile/api/profileApi";
+import {
+    useGetSpecializationsQuery,
+} from "@/features/get-specializations";
+import type { ProfileChanges } from "@/features/update-profile/api/profileApi";
 import { useUpdateUserMutation } from "@/features/update-user";
-import { useGetSpecializationsQuery } from "@/features/get-specializations";
-import { useUpdateProfileMutation } from "@/features/update-profile";
-
-import type { RootState, AppDispatch } from "@/app/store/store";
-
 import {
-    setEmail,
-    setPhone,
-} from "@/entities/user/model/userSlice";
-
-import {
-    setSocialNetworks,
     setSpecialistLevel,
+    setSocialNetworks,
 } from "@/entities/profile/model/profileSlice";
-
 import styles from "./EditPersonalInfoForm.module.css";
-
-interface EditPersonalInfoFormProps {
-    profile: Profile;
-}
+import type { RootState } from "@/app/store/store";
 
 interface PersonalInfoForm {
     username: string;
@@ -46,106 +43,112 @@ interface PersonalInfoForm {
     };
 }
 
-const MAX_FILE_SIZE = 5 * 1024 * 1024;
+interface EditPersonalInfoFormProps {
+    profile: Profile;
+    onSubmit: (
+        changes: ProfileChanges
+    ) => Promise<void>;
+    onSuccess: () => void;
+    isSaving: boolean;
+}
 
 export const EditPersonalInfoForm = ({
     profile,
+    onSubmit,
+    onSuccess,
+    isSaving,
 }: EditPersonalInfoFormProps) => {
-    const [selectedFile, setSelectedFile] = useState<File | null>(
-        null
-    );
-
-    const fileInputRef = useRef<HTMLInputElement>(null);
-
-    const previewUrl = useMemo(() => {
-        if (selectedFile) {
-            return URL.createObjectURL(selectedFile);
-        }
-
-        return profile.avatarUrl ?? null;
-    }, [selectedFile, profile.avatarUrl]);
-
-    useEffect(() => {
-        if (!selectedFile) {
-            return;
-        }
-
-        return () => {
-            URL.revokeObjectURL(previewUrl);
-        };
-    }, [selectedFile, previewUrl]);
-
-    const dispatch = useDispatch<AppDispatch>();
-
-    const email = useSelector(
-        (state: RootState) => state.user.email
-    );
-
-    const phone = useSelector(
-        (state: RootState) => state.user.phone
-    );
+    const dispatch = useDispatch();
 
     const specialistLevel = useSelector(
-        (state: RootState) => state.profile.specialistLevel
+        (state: RootState) =>
+            state.profile.specialistLevel
     );
 
     const socialNetworks = useSelector(
-        (state: RootState) => state.profile.socialNetworks
+        (state: RootState) =>
+            state.profile.socialNetworks
     );
 
-    const { data: specializations } =
-        useGetSpecializationsQuery();
+    const [selectedFile, setSelectedFile] =
+        useState<File | null>(null);
 
-    const currentSpecializationId =
-        profile.profiles[0]?.specializationId;
+    const fileInputRef =
+        useRef<HTMLInputElement>(null);
 
-    const { register, handleSubmit } =
-        useForm<PersonalInfoForm>({
-            defaultValues: {
-                username: profile.username ?? "",
-                country: profile.country ?? "",
-                city: profile.city ?? "",
-                email: email || profile.email || "",
-                phone: phone || profile.phone || "",
-                birthday:
-                    profile.birthday?.slice(0, 10) ?? "",
-                address: profile.address ?? "",
-                specializationId: currentSpecializationId,
-                specialistLevel,
-                socialNetworks,
-            },
-        });
+    const professionalProfile =
+        profile.profiles[0];
 
-    const [updateUser, { isLoading }] =
-        useUpdateUserMutation();
+    const {
+        data: specializations,
+    } = useGetSpecializationsQuery();
 
     const [
-        updateProfile,
-        { isLoading: isProfileUpdating },
-    ] = useUpdateProfileMutation();
+        updateUser,
+        { isLoading: isUpdatingUser },
+    ] = useUpdateUserMutation();
 
-    const handleFileSelect = (file: File) => {
-        if (!file.type.startsWith("image/")) {
-            return;
+    const {
+        register,
+        handleSubmit,
+        watch,
+    } = useForm<PersonalInfoForm>({
+        defaultValues: {
+            username: profile.username,
+            country: profile.country,
+            city: profile.city,
+            email: profile.email,
+            phone: profile.phone,
+            birthday: profile.birthday
+                ? profile.birthday.slice(0, 10)
+                : "",
+            address: profile.address,
+            specializationId:
+                professionalProfile?.specializationId,
+            specialistLevel,
+            socialNetworks,
+        },
+    });
+
+    const previewUrl = useMemo(() => {
+        if (!selectedFile) {
+            return profile.avatarUrl;
         }
 
-        if (file.size > MAX_FILE_SIZE) {
-            return;
-        }
+        return URL.createObjectURL(
+            selectedFile
+        );
+    }, [selectedFile, profile.avatarUrl]);
 
-        setSelectedFile(file);
-    };
+    useEffect(() => {
+        return () => {
+            if (selectedFile) {
+                URL.revokeObjectURL(previewUrl);
+            }
+        };
+    }, [selectedFile, previewUrl]);
+
+    const specializationId = watch(
+        "specializationId"
+    );
 
     const handleFileChange = (
         event: React.ChangeEvent<HTMLInputElement>
     ) => {
         const file = event.target.files?.[0];
 
-        if (file) {
-            handleFileSelect(file);
+        if (!file) {
+            return;
         }
 
-        event.target.value = "";
+        if (file.size > 5 * 1024 * 1024) {
+            alert(
+                "Размер файла не должен превышать 5 МБ"
+            );
+            return;
+        }
+
+        setSelectedFile(file);
     };
 
     const handleDrop = (
@@ -153,137 +156,165 @@ export const EditPersonalInfoForm = ({
     ) => {
         event.preventDefault();
 
-        const file = event.dataTransfer.files[0];
+        const file =
+            event.dataTransfer.files?.[0];
 
-        if (file) {
-            handleFileSelect(file);
-        }
-    };
-
-    const handleDragOver = (
-        event: React.DragEvent<HTMLDivElement>
-    ) => {
-        event.preventDefault();
-    };
-
-    const handleUploadClick = () => {
-        fileInputRef.current?.click();
-    };
-
-    const handleDeleteAvatar = async () => {
-        await updateUser({
-            id: profile.id,
-            data: {
-                avatarUrl: null,
-            },
-        }).unwrap();
-
-        setSelectedFile(null);
-    };
-
-    const onSubmit = async (data: PersonalInfoForm) => {
-        const professionalProfile = profile.profiles[0];
-
-        if (!professionalProfile) {
+        if (!file) {
             return;
         }
 
-        if (data.specializationId === undefined) {
+        if (file.size > 5 * 1024 * 1024) {
+            alert(
+                "Размер файла не должен превышать 5 МБ"
+            );
             return;
         }
 
-        dispatch(setEmail(data.email));
-        dispatch(setPhone(data.phone));
-        dispatch(setSpecialistLevel(data.specialistLevel));
-        dispatch(setSocialNetworks(data.socialNetworks));
+        setSelectedFile(file);
+    };
 
-        const file = selectedFile;
+    const handleDeletePhoto = async () => {
+        try {
+            await updateUser({
+                id: profile.id,
+                data: {
+                    avatarUrl: null,
+                    avatarImage: "",
+                },
+            }).unwrap();
 
-        let avatarImage: string | undefined;
-
-        if (file) {
-            avatarImage = await new Promise<string>(
-                (resolve, reject) => {
-                    const reader = new FileReader();
-
-                    reader.onload = () => {
-                        const result =
-                            reader.result as string;
-
-                        resolve(result.split(",")[1]);
-                    };
-
-                    reader.onerror = reject;
-
-                    reader.readAsDataURL(file);
-                }
+            setSelectedFile(null);
+        } catch (error) {
+            console.error(
+                "Ошибка удаления фотографии:",
+                error
             );
         }
-
-        await updateUser({
-            id: profile.id,
-            data: {
-                username: data.username,
-                country: data.country,
-                city: data.city || undefined,
-                birthday:
-                    data.birthday || undefined,
-                address: data.address,
-                avatarImage,
-            },
-        }).unwrap();
-
-        await updateProfile({
-            id: professionalProfile.id,
-            data: {
-                userId: profile.id,
-                specializationId:
-                    data.specializationId,
-                markingWeight:
-                    professionalProfile.markingWeight,
-                description:
-                    professionalProfile.description,
-                socialNetwork: [],
-                image_src:
-                    professionalProfile.image_src,
-                profileSkills:
-                    professionalProfile.profileSkills.map(
-                        (skill) => String(skill.id)
-                    ),
-            },
-        }).unwrap();
-
-        setSelectedFile(null);
     };
 
-    const socialNetworkFields = Object.keys(
-        socialNetworks
-    ) as Array<keyof PersonalInfoForm["socialNetworks"]>;
+    const fileToBase64 = (
+        file: File
+    ): Promise<string> =>
+        new Promise((resolve, reject) => {
+            const reader = new FileReader();
+
+            reader.onload = () => {
+                const result = reader.result;
+
+                if (typeof result !== "string") {
+                    reject(
+                        new Error(
+                            "Не удалось прочитать файл"
+                        )
+                    );
+                    return;
+                }
+
+                const base64 =
+                    result.split(",")[1];
+
+                resolve(base64);
+            };
+
+            reader.onerror = () => {
+                reject(reader.error);
+            };
+
+            reader.readAsDataURL(file);
+        });
+
+    const handleSubmitForm = async (
+        data: PersonalInfoForm
+    ) => {
+        try {
+            dispatch(
+                setSpecialistLevel(
+                    data.specialistLevel
+                )
+            );
+
+            dispatch(
+                setSocialNetworks(
+                    data.socialNetworks
+                )
+            );
+
+            let avatarImage:
+                | string
+                | undefined;
+
+            if (selectedFile) {
+                avatarImage =
+                    await fileToBase64(
+                        selectedFile
+                    );
+            }
+
+            await updateUser({
+                id: profile.id,
+                data: {
+                    username: data.username,
+                    country: data.country,
+                    city: data.city,
+                    birthday: data.birthday
+                        ? new Date(
+                            data.birthday
+                        ).toISOString()
+                        : undefined,
+                    address: data.address,
+                    ...(avatarImage && {
+                        avatarImage,
+                    }),
+                },
+            }).unwrap();
+
+            await onSubmit({
+                specializationId:
+                    data.specializationId,
+            });
+
+            setSelectedFile(null);
+
+            onSuccess();
+        } catch (error) {
+            console.error(
+                "Ошибка сохранения личной информации:",
+                error
+            );
+        }
+    };
 
     return (
         <form
             className={styles.form}
-            onSubmit={handleSubmit(onSubmit)}
+            onSubmit={handleSubmit(
+                handleSubmitForm
+            )}
         >
-            <section className={styles.section}>
+            <div className={styles.section}>
                 <div className={styles.sectionInfo}>
-                    <h2>Фото профиля</h2>
+                    <h2>Фотография</h2>
 
                     <p>
-                        Поделитесь своими профилями
-                        <br />
-                        в других соц. сетях
+                        Выберите фотографию
+                        профиля
                     </p>
                 </div>
 
                 <div className={styles.photoContent}>
                     <div className={styles.photoRow}>
-                        <div className={styles.photoColumn}>
+                        <div
+                            className={
+                                styles.photoColumn
+                            }
+                        >
                             {previewUrl ? (
                                 <img
-                                    className={styles.avatar}
+                                    className={
+                                        styles.avatar
+                                    }
                                     src={previewUrl}
-                                    alt="Фото профиля"
+                                    alt="Аватар"
                                 />
                             ) : (
                                 <div
@@ -291,17 +322,17 @@ export const EditPersonalInfoForm = ({
                                         styles.avatarPlaceholder
                                     }
                                 >
-                                    Фото
+                                    Нет фото
                                 </div>
                             )}
 
                             <button
-                                type="button"
                                 className={
                                     styles.deletePhoto
                                 }
+                                type="button"
                                 onClick={
-                                    handleDeleteAvatar
+                                    handleDeletePhoto
                                 }
                             >
                                 Удалить фото
@@ -309,78 +340,108 @@ export const EditPersonalInfoForm = ({
                         </div>
 
                         <div
-                            className={styles.dropzone}
-                            onClick={handleUploadClick}
+                            className={
+                                styles.dropzone
+                            }
+                            onDragOver={(event) =>
+                                event.preventDefault()
+                            }
                             onDrop={handleDrop}
-                            onDragOver={handleDragOver}
-                            role="button"
-                            tabIndex={0}
+                            onClick={() =>
+                                fileInputRef.current?.click()
+                            }
                         >
                             <input
                                 ref={fileInputRef}
                                 type="file"
-                                accept="image/jpeg,image/png,image/jpg"
-                                onChange={handleFileChange}
+                                accept="image/*"
                                 hidden
+                                onChange={
+                                    handleFileChange
+                                }
                             />
 
-                            <span
+                            <div
                                 className={
                                     styles.uploadIcon
                                 }
                             >
                                 ↑
-                            </span>
+                            </div>
 
-                            <span>
+                            <div>
+                                Перетащите фото сюда
+                                или{" "}
                                 <strong>
-                                    Кликни для изменения
-                                </strong>{" "}
-                                или перетащи сюда фотографию
-                            </span>
+                                    выберите файл
+                                </strong>
+                            </div>
 
                             <small>
-                                JPG, PNG, JPEG (не более 5Мб)
+                                PNG, JPG до 5 МБ
                             </small>
                         </div>
                     </div>
                 </div>
-            </section>
+            </div>
 
-            <section className={styles.section}>
+            <div className={styles.section}>
                 <div className={styles.sectionInfo}>
-                    <h2>Персональная информация</h2>
+                    <h2>
+                        Личная информация
+                    </h2>
 
                     <p>
-                        Поделитесь своими профилями
-                        <br />
-                        в других соц. сетях
+                        Основная информация
+                        вашего профиля
                     </p>
                 </div>
 
                 <div className={styles.fields}>
                     <div className={styles.field}>
-                        <label>Никнейм *</label>
-                        <input {...register("username")} />
+                        <label>
+                            Никнейм
+                        </label>
+
+                        <input
+                            {...register(
+                                "username"
+                            )}
+                            placeholder="Никнейм"
+                        />
                     </div>
 
                     <div className={styles.field}>
-                        <label>Номер для связи</label>
-                        <input {...register("phone")} />
-                    </div>
-
-                    <div className={styles.field}>
-                        <label>IT специальность *</label>
+                        <label>
+                            Специальность
+                        </label>
 
                         <select
-                            {...register("specializationId", {
-                                valueAsNumber: true,
-                            })}
+                            {...register(
+                                "specializationId",
+                                {
+                                    valueAsNumber:
+                                        true,
+                                }
+                            )}
+                            value={
+                                specializationId ??
+                                ""
+                            }
                         >
-                            {specializations?.data.map(
-                                (specialization) => (
+                            <option value="">
+                                Выберите
+                                специальность
+                            </option>
+
+                            {specializations?.data?.map(
+                                (
+                                    specialization
+                                ) => (
                                     <option
-                                        key={specialization.id}
+                                        key={
+                                            specialization.id
+                                        }
                                         value={
                                             specialization.id
                                         }
@@ -392,98 +453,147 @@ export const EditPersonalInfoForm = ({
                                 )
                             )}
                         </select>
-
-                        <button
-                            type="button"
-                            className={styles.linkButton}
-                        >
-                            Сменить специальность
-                        </button>
                     </div>
 
                     <div className={styles.field}>
-                        <label>Локация</label>
-                        <input {...register("city")} />
-                    </div>
+                        <label>Email</label>
 
-                    <div className={styles.field}>
-                        <label>Email для связи</label>
-                        <input {...register("email")} />
+                        <input
+                            {...register("email")}
+                            placeholder="Email"
+                        />
                     </div>
 
                     <div className={styles.field}>
                         <label>
-                            Уровень специалиста
+                            Телефон
                         </label>
 
-                        <select
+                        <input
+                            {...register("phone")}
+                            placeholder="Телефон"
+                        />
+                    </div>
+
+                    <div className={styles.field}>
+                        <label>
+                            Дата рождения
+                        </label>
+
+                        <input
+                            type="date"
                             {...register(
-                                "specialistLevel"
+                                "birthday"
                             )}
-                        >
-                            <option value="">
-                                Не указан
-                            </option>
+                        />
+                    </div>
 
-                            <option value="Junior">
-                                Junior
-                            </option>
+                    <div className={styles.field}>
+                        <label>
+                            Страна
+                        </label>
 
-                            <option value="Middle">
-                                Middle
-                            </option>
+                        <input
+                            {...register(
+                                "country"
+                            )}
+                            placeholder="Страна"
+                        />
+                    </div>
 
-                            <option value="Senior">
-                                Senior
-                            </option>
-                        </select>
+                    <div className={styles.field}>
+                        <label>
+                            Город
+                        </label>
+
+                        <input
+                            {...register("city")}
+                            placeholder="Город"
+                        />
+                    </div>
+
+                    <div className={styles.field}>
+                        <label>
+                            Адрес
+                        </label>
+
+                        <input
+                            {...register(
+                                "address"
+                            )}
+                            placeholder="Адрес"
+                        />
                     </div>
                 </div>
-            </section>
+            </div>
 
-            <section className={styles.section}>
+            <div className={styles.section}>
                 <div className={styles.sectionInfo}>
-                    <h2>Личные ссылки</h2>
+                    <h2>
+                        Социальные сети
+                    </h2>
 
                     <p>
-                        Поделитесь своими профилями
-                        <br />
-                        в других соц. сетях
+                        Ссылки на ваши
+                        социальные сети
                     </p>
                 </div>
 
-                <div className={styles.socialFields}>
-                    {socialNetworkFields.map((network) => (
+                <div
+                    className={
+                        styles.socialFields
+                    }
+                >
+                    {(
+                        Object.keys(
+                            socialNetworks
+                        ) as Array<
+                            keyof PersonalInfoForm["socialNetworks"]
+                        >
+                    ).map((network) => (
                         <div
-                            className={styles.field}
+                            className={
+                                styles.field
+                            }
                             key={network}
                         >
-                            <label>{network}</label>
+                            <label>
+                                {network}
+                            </label>
 
                             <input
                                 {...register(
                                     `socialNetworks.${network}`
                                 )}
-                                placeholder="Ссылка"
+                                placeholder={
+                                    network
+                                }
                             />
                         </div>
                     ))}
                 </div>
-            </section>
+            </div>
 
             <div className={styles.submitRow}>
                 <button
-                    className={styles.saveButton}
+                    className={
+                        styles.saveButton
+                    }
                     type="submit"
                     disabled={
-                        isLoading ||
-                        isProfileUpdating
+                        isSaving ||
+                        isUpdatingUser
                     }
                 >
-                    {isLoading ||
-                        isProfileUpdating
+                    {isSaving ||
+                        isUpdatingUser
                         ? "Сохранение..."
-                        : "Сохранить"}
+                        : "Далее"}
+
+                    {!isSaving &&
+                        !isUpdatingUser && (
+                            <span>→</span>
+                        )}
                 </button>
             </div>
         </form>
