@@ -1,7 +1,5 @@
 import { NavLink } from "react-router-dom";
-
 import { LogoutButton } from "@/features/logout";
-
 import MainMenuIcon from "@/shared/ui/assets/icons/home.svg";
 import UserMenuIcon from "@/shared/ui/assets/icons/user.svg";
 import EducationMenuIcon from "@/shared/ui/assets/icons/book.svg";
@@ -10,8 +8,7 @@ import MentorsMenuIcon from "@/shared/ui/assets/icons/messageSend.svg";
 import BaseMenuIcon from "@/shared/ui/assets/icons/listTasks.svg";
 import AnalyticsMenuIcon from "@/shared/ui/assets/icons/pieChart.svg";
 import SupportIcon from "@/shared/ui/assets/icons/message.svg";
-
-import styles from "./Sidebar.module.css";
+import styles from "./UserSidebar.module.css";
 
 interface SidebarProps {
     isCollapsed: boolean;
@@ -59,7 +56,7 @@ const navigationItems = [
     },
 ];
 
-export function Sidebar({ isCollapsed }: SidebarProps) {
+export function UserSidebar({ isCollapsed }: SidebarProps) {
     return (
         <aside
             className={`${styles.sidebar} ${

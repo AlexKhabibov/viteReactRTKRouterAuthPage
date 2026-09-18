@@ -1,0 +1,159 @@
+.sidebar {
+    width: 228px;
+
+    height: auto;
+    min-height: 100%;
+
+    flex-shrink: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    box-sizing: border-box;
+
+    padding: 30px 16px 16px;
+
+    background: #ffffff;
+
+    transition: width 0.2s ease;
+}
+
+.sidebarCollapsed {
+    width: 72px;
+
+    padding-left: 12px;
+    padding-right: 12px;
+}
+
+.navigation {
+    width: 100%;
+}
+
+.navigationList {
+    display: flex;
+    flex-direction: column;
+
+    gap: 4px;
+
+    margin: 0;
+    padding: 0;
+
+    list-style: none;
+}
+
+.navigationList li {
+    width: 100%;
+}
+
+.link {
+    position: relative;
+
+    width: 100%;
+    min-height: 40px;
+
+    display: flex;
+    align-items: center;
+
+    box-sizing: border-box;
+
+    padding: 0 12px;
+
+    gap: 10px;
+
+    border-radius: 10px;
+
+    color: #4b4b4b;
+
+    font-size: 14px;
+    font-weight: 400;
+
+    text-decoration: none;
+
+    transition:
+        background-color 0.15s ease,
+        color 0.15s ease;
+}
+
+.link:hover {
+    background: #f7f7f7;
+    color: #6412ff;
+}
+
+.active {
+    background: #f7f7f7;
+    color: #6412ff;
+}
+
+.icon {
+    width: 20px;
+    height: 20px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #6412ff;
+
+    font-size: 18px;
+    line-height: 1;
+}
+
+.icon img {
+    display: block;
+
+    width: 20px;
+    height: 20px;
+
+    object-fit: contain;
+}
+
+.label {
+    min-width: 0;
+
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+@media (max-width: 1024px) {
+    .sidebar {
+        width: 72px;
+
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+
+    .label {
+        display: none;
+    }
+
+    .link {
+        justify-content: center;
+
+        padding: 0;
+    }
+}
+
+@media (max-width: 768px) {
+
+    .sidebar,
+    .sidebarCollapsed {
+        width: 228px;
+        height: 100%;
+
+        padding: 30px 16px 16px;
+
+        box-sizing: border-box;
+    }
+
+    .label {
+        display: block;
+    }
+
+    .link {
+        justify-content: flex-start;
+
+        padding: 0 12px;
+    }
+}

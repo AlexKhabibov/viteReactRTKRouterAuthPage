@@ -6,7 +6,10 @@ import { ForgotPasswordPage } from "@/pages/auth/forgot-password";
 import { ResetPasswordPage } from "@/pages/auth/reset-password";
 import { ProfileEditPage, ProfileViewPage } from "@/pages/profile";
 import { DashboardLayout } from "../../layouts/dashboard/DashboardLayout";
+import { AdminLayout } from "@/app/layouts/admin/AdminLayout";
+import { SpecializationDetailsPage } from "@/pages/admin/specialization/specialization-details";
 import { ProtectedRoute } from "./ProtectedRoute";
+import { SpecializationsListPage } from "@/pages/admin/specialization/specializations-list";
 
 export const routerConfig = createBrowserRouter([
     {
@@ -49,6 +52,33 @@ export const routerConfig = createBrowserRouter([
                     {
                         path: "profile/edit",
                         element: <ProfileEditPage />,
+                    },
+                ],
+            },
+
+            {
+                path: "/admin",
+                element: <AdminLayout />,
+                children: [
+                    {
+                        index: true,
+                        element: <div>Admin route</div>,
+                    },
+                    {
+                        path: "specializations",
+                        element: <SpecializationsListPage />,
+                    },
+                    {
+                        path: "specializations/create",
+                        element: (
+                            <SpecializationDetailsPage mode="create" />
+                        ),
+                    },
+                    {
+                        path: "specializations/:id",
+                        element: (
+                            <SpecializationDetailsPage mode="view" />
+                        ),
                     },
                 ],
             },

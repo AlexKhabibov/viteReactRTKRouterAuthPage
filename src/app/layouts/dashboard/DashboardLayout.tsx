@@ -1,10 +1,8 @@
 import { useState } from "react";
 import { Outlet } from "react-router-dom";
-
 import { Header } from "@/widgets/header";
-import { Sidebar } from "@/widgets/sidebar";
+import { UserSidebar } from "@/widgets/user-sidebar";
 import { Footer } from "@/widgets/footer";
-
 import styles from "./DashboardLayout.module.css";
 
 export function DashboardLayout() {
@@ -39,11 +37,11 @@ export function DashboardLayout() {
             <div className={styles.content}>
                 <div
                     className={`${styles.sidebarWrapper} ${isMobileMenuOpen
-                            ? styles.sidebarWrapperOpen
-                            : ""
+                        ? styles.sidebarWrapperOpen
+                        : ""
                         }`}
                 >
-                    <Sidebar
+                    <UserSidebar
                         isCollapsed={
                             isMobileMenuOpen
                                 ? false
