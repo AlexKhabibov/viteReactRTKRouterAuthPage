@@ -1,26 +1,19 @@
 .layout {
     min-height: 100vh;
-
     display: flex;
     flex-direction: column;
-
     background: #f7f7f7;
 }
 
 .body {
     flex: 1;
-
     display: flex;
-
     min-height: 0;
 }
 
 .content {
     flex: 1;
-
     min-width: 0;
-
     padding: 30px;
-
     box-sizing: border-box;
 }
