@@ -4,23 +4,34 @@ import {
     useUpdateProfileMutation,
     type ProfileChanges,
 } from "@/features/update-profile/api/profileApi";
+
 import { ProfileTabs } from "./ProfileTabs";
 import { EditPersonalInfoForm } from "./EditPersonalInfoForm";
 import { EditAboutForm } from "./EditAboutForm";
 import { EditSkillsForm } from "./EditSkillsForm";
+
 import styles from "./ProfileEditor.module.css";
 
 interface ProfileEditorProps {
     profile: Profile;
 }
 
-export const ProfileEditor = ({ profile }: ProfileEditorProps) => {
-    const [activeTab, setActiveTab] = useState(0);
+export const ProfileEditor = ({
+    profile,
+}: ProfileEditorProps) => {
+    const [activeTab, setActiveTab] =
+        useState(0);
 
-    const [updateProfile, { isLoading: isSaving }] =
-        useUpdateProfileMutation();
+    const [
+        updateProfile,
+        { isLoading: isSaving },
+    ] = useUpdateProfileMutation();
 
-    const professionalProfile = profile.profiles[0];
+    const professionalProfile =
+        profile.profiles[0];
+
+    const [profileChanges, setProfileChanges] =
+        useState<ProfileChanges>({});
 
     const handleProfileUpdate = async (
         changes: ProfileChanges
@@ -29,34 +40,42 @@ export const ProfileEditor = ({ profile }: ProfileEditorProps) => {
             return;
         }
 
+        const updatedChanges = {
+            ...profileChanges,
+            ...changes,
+        };
+
+        setProfileChanges(updatedChanges);
+
         await updateProfile({
             id: professionalProfile.id,
+
             data: {
                 userId: profile.id,
 
                 specializationId:
-                    changes.specializationId ??
+                    updatedChanges.specializationId ??
                     professionalProfile.specializationId,
 
                 markingWeight:
-                    changes.markingWeight ??
+                    updatedChanges.markingWeight ??
                     professionalProfile.markingWeight,
 
                 description:
-                    changes.description ??
+                    updatedChanges.description ??
                     professionalProfile.description,
 
                 image_src:
-                    changes.image_src ??
+                    updatedChanges.image_src ??
                     professionalProfile.image_src,
 
                 profileSkills:
-                    changes.profileSkills ??
+                    updatedChanges.profileSkills ??
                     professionalProfile.profileSkills.map(
-                        (skill) => String(skill.id)
+                        (skill) =>
+                            String(skill.id)
                     ),
 
-                // Пока соцсети — заглушка.
                 socialNetwork: [],
             },
         }).unwrap();
@@ -64,7 +83,9 @@ export const ProfileEditor = ({ profile }: ProfileEditorProps) => {
 
     const handleNext = () => {
         if (activeTab < 2) {
-            setActiveTab((prev) => prev + 1);
+            setActiveTab(
+                (prev) => prev + 1
+            );
         }
     };
 
@@ -81,31 +102,53 @@ export const ProfileEditor = ({ profile }: ProfileEditorProps) => {
                         onChange={setActiveTab}
                     />
 
-                    <div className={styles.content}>
+                    <div
+                        className={
+                            styles.content
+                        }
+                    >
                         {activeTab === 0 && (
                             <EditPersonalInfoForm
                                 profile={profile}
-                                onSubmit={handleProfileUpdate}
-                                onSuccess={handleNext}
-                                isSaving={isSaving}
+                                onSubmit={
+                                    handleProfileUpdate
+                                }
+                                onSuccess={
+                                    handleNext
+                                }
+                                isSaving={
+                                    isSaving
+                                }
                             />
                         )}
 
                         {activeTab === 1 && (
                             <EditAboutForm
                                 profile={profile}
-                                onSubmit={handleProfileUpdate}
-                                onSuccess={handleNext}
-                                isSaving={isSaving}
+                                onSubmit={
+                                    handleProfileUpdate
+                                }
+                                onSuccess={
+                                    handleNext
+                                }
+                                isSaving={
+                                    isSaving
+                                }
                             />
                         )}
 
                         {activeTab === 2 && (
                             <EditSkillsForm
                                 profile={profile}
-                                onSubmit={handleProfileUpdate}
-                                onSuccess={handleNext}
-                                isSaving={isSaving}
+                                onSubmit={
+                                    handleProfileUpdate
+                                }
+                                onSuccess={
+                                    handleNext
+                                }
+                                isSaving={
+                                    isSaving
+                                }
                             />
                         )}
                     </div>
