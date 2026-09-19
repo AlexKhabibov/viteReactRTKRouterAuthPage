@@ -81,7 +81,10 @@ export const EditPersonalInfoForm = ({
 
     const {
         data: specializations,
-    } = useGetSpecializationsQuery();
+    } = useGetSpecializationsQuery({
+        page: 1,
+        limit: 100,
+    });
 
     const [
         updateUser,

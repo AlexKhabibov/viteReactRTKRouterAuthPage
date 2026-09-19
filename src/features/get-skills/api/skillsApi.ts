@@ -31,12 +31,38 @@ interface Skills {
     }[];
 }
 
+interface GetSkillsParams {
+    page?: number;
+    limit?: number;
+    title?: string;
+    specializations?: number;
+    authorId?: string;
+}
+
 export const skillsApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
-        getSkills: builder.query<Skills, void>({
-            query: () => ({
+        getSkills: builder.query<
+            Skills,
+            GetSkillsParams
+        >({
+            query: ({
+                page = 1,
+                limit = 10,
+                title,
+                specializations,
+                authorId,
+            }) => ({
                 url: "/skills",
                 method: "GET",
+                params: {
+                    page,
+                    limit,
+                    ...(title && { title }),
+                    ...(specializations && {
+                        specializations,
+                    }),
+                    ...(authorId && { authorId }),
+                },
             }),
         }),
     }),

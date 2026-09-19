@@ -19,15 +19,35 @@ export interface Specializations {
     }[];
 }
 
+interface GetSpecializationsParams {
+    page?: number;
+    limit?: number;
+    title?: string;
+}
+
 export const specializationsApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
-        getSpecializations: builder.query<Specializations, void>({
-            query: () => ({
+        getSpecializations: builder.query<
+            Specializations,
+            GetSpecializationsParams
+        >({
+            query: ({
+                page = 1,
+                limit = 10,
+                title,
+            }) => ({
                 url: "/specializations",
                 method: "GET",
+                params: {
+                    page,
+                    limit,
+                    ...(title && { title }),
+                },
             }),
         }),
     }),
 });
 
-export const { useGetSpecializationsQuery } = specializationsApi;
+export const {
+    useGetSpecializationsQuery,
+} = specializationsApi;
